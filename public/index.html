@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ND3 Viewer Web-App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
+        "three/examples/jsm/loaders/PLYLoader.js": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/loaders/PLYLoader.js",
+        "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/controls/OrbitControls.js"
+      }
+    }
+  </script>
+
+
+</head>
+<body>
+  <div id="viewport">
+  <div class="menu-item" data-view="view1">⿱</div>
+  <div class="menu-item selected" data-view="view2">⿺</div>
+  <div class="menu-item" data-view="view3">⿴</div>
+</div>
+
+<div id="viewcam" style="display: none;">
+  <div class="menu-item" data-view="view1">⿱</div>
+  <div class="menu-item selected" data-view="view2">⿺</div>
+  <div class="menu-item" data-view="view3">⿴</div>
+</div>
+
+
+<div id="sidebar" class="view3-menu" style="display: none;">
+  <div class="menu-item sel">․</div>
+  <div class="menu-item" >‥</div>
+  <div class="menu-item" >…</div>
+</div>
+
+<div id="underbar" class="view3-menu" style="display: none;">
+  <div class="menu-item">⿻</div>
+  <div class="menu-item sel" style="margin-top: 6px;">  
+    <div class="grid-A">
+      <span class="grid-B top">⿲</span>
+      <span class="grid-B bottom">⿳</span></div>
+    </div>
+</div>
+
+<div id="logview" class="console-overlay view3-menu">
+  <button id="close-logview" class="close-button">-</button>
+  <div class="log-content" id="meta-content">
+    Loading meta data...
+  </div>
+</div>
+
+
+<div id="fullScreenPLYViewer" class="full-screen-ply" style="display: none;"></div>
+
+  <!-- Main container filling the viewport -->
+  <div class="grid-container">
+    <!-- Top Section: Left column for grayscale images; Right column for merged PLY viewer -->
+    <div class="top-section">
+      <div class="left-col">
+        <div class="grayscale-cell" id="gray-cell-1">
+          <img id="img-grayscale" src="" alt="Grayscale 1">
+          <div class="channel-label">D</div>
+          <div class="extra-label">
+            <ul>
+              <li>DEPTH MODE: WFOV</li>
+              <li>BINNING: ON</li>
+              <li>RESOLUTION: 1024x1024</li>
+            </ul>
+          </div>
+        </div>
+        <div class="grayscale-cell" id="gray-cell-2">
+          <img id="img-grayscale-2" src="" alt="Grayscale 2">
+          <div class="channel-label">N</div>
+          <div class="extra-label">
+            <ul>
+              <li>NIR 850nm</li>
+              <li>BINNING: ON</li>
+              <li>RESOLUTION: 1024x1024</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="right-col">
+        <div class="ply-viewer" id="ply-viewer-merged"></div>
+      </div>
+    </div>
+    
+    <!-- Bottom Section: Scene (Color) images -->
+    <div class="scene-section">
+      <div class="scene-item">
+        <img id="img-original" src="" alt="Original Scene">
+        <div class="channel-label">O</div>
+      </div>
+      <div class="scene-item">
+        <img id="img-blue" src="" alt="Blue Channel">
+        <div class="channel-label blue">B</div>
+      </div>
+      <div class="scene-item">
+        <img id="img-green" src="" alt="Green Channel">
+        <div class="channel-label green">G</div>
+      </div>
+      <div class="scene-item">
+        <img id="img-red" src="" alt="Red Channel">
+        <div class="channel-label red">R</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meta Data Overlay (if needed) 
+  <div id="meta-overlay" class="meta-overlay">
+    <button id="close-overlay" class="close-button">X</button>
+    <div id="meta-content" class="meta-content">
+      Loading meta data...
+    </div>
+  </div>-->
+
+  <!-- Load external JavaScript -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

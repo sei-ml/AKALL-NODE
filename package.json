@@ -1,0 +1,33 @@
+{
+  "name": "akall_node",
+  "version": "1.1.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [
+    "API",
+    "REST",
+    "MVVM",
+    "MongoDB",
+    "Express",
+    "WebSockets"
+  ],
+  "author": "Don D. Haddad <ddh@mit.edu>",
+  "license": "MIT",
+  "description": "Azure Kinect a La Luna - Application I/O Server",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.6",
+    "p-queue": "^8.1.0",
+    "socket.io": "^4.8.1",
+    "tar": "^7.4.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9"
+  }
+}
