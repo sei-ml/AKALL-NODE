@@ -256,22 +256,20 @@ html, body {
   background: rgba(0, 0, 0, 0.85);
   color: #fff;
   z-index: 10000;
-  padding: 5px;           /* Reduced padding */
+  padding: 5px;
   font-family: monospace;
-  display: none;          /* Hidden by default; toggle via JS */
+  display: none;
   opacity: 0.5;
-  overflow: hidden;       /* Hide scrollbars */
-  font-size: 0.8em;       /* Smaller text */
+  overflow: hidden;
+  font-size: 0.8em;
   line-height: 1.2;
 }
 
 .console-overlay p {
-  margin: 0.2em 0;        /* Reduce vertical spacing between lines */
-  white-space: normal;    /* Allow text to wrap */
-  word-break: break-all;  /* Break words if needed */
+  margin: 0.2em 0;
+  white-space: normal;
+  word-break: break-all;
 }
-
-
 
 .console-overlay .close-button {
   position: absolute;
@@ -285,11 +283,27 @@ html, body {
   cursor: pointer;
 }
 
-.console-overlay .log-content {
-  padding: 20px;
-  
+.close-button:hover{
+  background-color: #888;
 }
 
+/* Minimized state for logview */
+.console-overlay.minimized {
+  height: 30px; 
+  width: 50%; 
+  overflow: hidden;
+  opacity: 0.7;
+  padding: 5px;
+  transition: height 0.1s ease, width 0.1s ease, opacity 0.3s ease;
+}
+
+.console-overlay.minimized .log-content {
+  display: none;
+}
+
+.console-overlay .log-content {
+  padding: 30px 20px;
+}
 
 #topbar {
   position: fixed;

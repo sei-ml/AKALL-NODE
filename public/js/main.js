@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { loadND3File } from './nd3Loader.js';
 
-// Global flag to control whether the orientation helper is active.
+// Global variables
 let showOrientationHelper = false;
 
 /**
@@ -12,11 +13,12 @@ let showOrientationHelper = false;
  * @param {THREE.WebGLRenderer} mainRenderer - The main renderer.
  * @param {THREE.Camera} mainCamera - The main camera.
  * @param {OrbitControls} controls - The OrbitControls for the main scene.
- * @returns {Function} An update function to be called every frame.
+ * @returns {Function}
  */
+
 function createOrientationHelper(mainRenderer, mainCamera, controls) {
-  const helperSize = 60; // overlay size in pixels
-  const margin = 10;      // margin from the canvas edge
+  const helperSize = 100;
+  const margin = 10;
 
   // --- Create the helper scene and camera ---
   const helperScene = new THREE.Scene();
@@ -41,20 +43,21 @@ function createOrientationHelper(mainRenderer, mainCamera, controls) {
   const helperCube = new THREE.Mesh(cubeGeometry, cubeMaterials);
   helperScene.add(helperCube);
 
-  // --- Add dotted (dashed) edges to the cube ---
   const edges = new THREE.EdgesGeometry(cubeGeometry);
   const lineMaterial = new THREE.LineBasicMaterial({
-    color: 0x333333,
-    linewidth: 2, // Note: many browsers limit this to 1.
+    color: 0x888888,
+    linewidth: 2, 
   });
 
   const cubeEdges = new THREE.LineSegments(edges, lineMaterial);
   cubeEdges.computeLineDistances();
   helperCube.add(cubeEdges);
 
-  // --- Optionally add an AxesHelper ---
+  // Create the AxesHelper
   const axesHelper = new THREE.AxesHelper(60);
-  //helperScene.add(axesHelper);
+  helperScene.add(axesHelper);
+  axesHelper.setColors(new THREE.Color(0xffffff), new THREE.Color(0xffffff), new THREE.Color(0xffffff));
+
 
   // --- Set up raycaster and variables for interaction ---
   const raycaster = new THREE.Raycaster();
@@ -143,10 +146,10 @@ function createOrientationHelper(mainRenderer, mainCamera, controls) {
     }
   }
   
-
   // Attach event listeners on the main renderer's canvas.
   mainRenderer.domElement.addEventListener('mousemove', onHelperMouseMove, false);
   mainRenderer.domElement.addEventListener('click', onHelperClick, false);
+
 
   // --- The update function: render the helper overlay ---
   function updateHelper() {
@@ -171,6 +174,12 @@ function createOrientationHelper(mainRenderer, mainCamera, controls) {
   }
 
   return updateHelper;
+}
+
+function logCamera(camera) {
+  console.log(`Camera Position: x=${camera.position.x}, y=${camera.position.y}, z=${camera.position.z}`);
+  console.log(`Camera Rotation: x=${camera.rotation.x}, y=${camera.rotation.y}, z=${camera.rotation.z}`);
+
 }
 
 function createMergedPLYViewer(containerId, plyFileUrl) {
@@ -219,9 +228,10 @@ function createMergedPLYViewer(containerId, plyFileUrl) {
   // Load the PLY file.
   const loader = new PLYLoader();
   let updateOrientationHelper = null;
-  loader.load(plyFileUrl, function (geometry) {
-    console.log('PLY model loaded:', geometry);
 
+  loader.load(plyFileUrl, function (geometry) {
+
+    console.log('PLY model loaded:', geometry);
     geometry.computeBoundingBox();
     const bbox = geometry.boundingBox;
     const center = new THREE.Vector3();
@@ -234,7 +244,7 @@ function createMergedPLYViewer(containerId, plyFileUrl) {
 
     // Flip and center the geometry.
     geometry.applyMatrix4(new THREE.Matrix4().makeScale(-1, -1, -1));
-    geometry.translate(center.x, center.y, center.z);
+    geometry.translate(center.x+128, center.y, center.z);
 
     const hasColor = !!geometry.attributes.color;
     const material = new THREE.PointsMaterial({
@@ -249,9 +259,12 @@ function createMergedPLYViewer(containerId, plyFileUrl) {
     // Adjust the camera based on the model's bounding box.
     const maxDim = Math.max(size.x, size.y, size.z);
     const distance = maxDim * 0.5;  
-    camera.position.set(0, 0, distance);
+    camera.position.set(-256, 128, distance);
+
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
+    camera.quaternion.setFromEuler(new THREE.Euler(-0.7853981633974482, 0, 0));
+    
     // Create the orientation helper overlay.
     updateOrientationHelper = createOrientationHelper(renderer, camera, controls);
     
@@ -272,58 +285,10 @@ function createMergedPLYViewer(containerId, plyFileUrl) {
   animate();
 }
 
-function loadMetaData() {
-  fetch('/watch/processed/C_LS180_Y0_LO-1739322269902/meta.json')
-    .then(response => {
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-      return response.json();
-    })
-    .then(meta => {
-      console.log("Meta Data Loaded:", meta);
-  
-      const parts = meta.processedPath.split('/');
-      const folderName = parts[parts.length - 1];
-      const relativePath = "/watch/processed/" + folderName + "/";
-  
-      document.getElementById('img-original').src = relativePath + meta.outputs.originalJPEG;
-      document.getElementById('img-blue').src = relativePath + meta.outputs.channels.blue;
-      document.getElementById('img-green').src = relativePath + meta.outputs.channels.green;
-      document.getElementById('img-red').src = relativePath + meta.outputs.channels.red;
-  
-      if (meta.outputs.rawConverted?.length) {
-        document.getElementById('img-grayscale').src = relativePath + meta.outputs.rawConverted[0];
-        document.getElementById('img-grayscale-2').src = meta.outputs.rawConverted[1]
-          ? relativePath + meta.outputs.rawConverted[1]
-          : relativePath + meta.outputs.rawConverted[0];
-      } else {
-        document.getElementById('img-grayscale').src = relativePath + meta.outputs.originalJPEG;
-        document.getElementById('img-grayscale-2').src = relativePath + meta.outputs.originalJPEG;
-      }
-  
-      if (meta.outputs.nd3Reconstruction?.length) {
-        createMergedPLYViewer("ply-viewer-merged", relativePath + meta.outputs.nd3Reconstruction[0].ply);
-      }
-  
-      // Updated innerHTML in a simple block style.
-      const metaContent = document.getElementById('meta-content');
-      metaContent.innerHTML = `
-        <p><strong>Timestamp:</strong> ${meta.timestamp}</p>
-        <p><strong>Original JPEG:</strong> ${meta.outputs.originalJPEG}</p>
-        <p><strong>Channels:</strong> Blue: ${meta.outputs.channels.blue}, Green: ${meta.outputs.channels.green}, Red: ${meta.outputs.channels.red}</p>
-        <p><strong>ND3 Reconstruction Outputs:</strong> ${meta.outputs.nd3Reconstruction.map(recon => `${recon.colorImage} → ${recon.ply}`).join(' | ')}</p>
-        <p><strong>Raw Converted Files:</strong> ${meta.outputs.rawConverted.join(', ')}</p>
-      `;
-    })
-    .catch(err => {
-      console.error('Error loading meta.json:', err);
-      document.getElementById('meta-content').textContent = 'Error loading meta data.';
-    });
-}
 
-  
 function toggleMetaOverlay() {
-//  const overlay = document.getElementById('meta-overlay');
-//  overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+  const overlay = document.getElementById('meta-overlay');
+  overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
 }
 
 function toggleView3Elements(state) {
@@ -333,7 +298,6 @@ function toggleView3Elements(state) {
   }
 }
 
-// Toggle meta console on backtick key press.
 document.addEventListener('keydown', function (event) {
   if (event.key === '`') {
     toggleMetaOverlay();
@@ -356,11 +320,16 @@ function adjustLayout() {
 window.addEventListener('load', adjustLayout);
 window.addEventListener('resize', adjustLayout);
 
-/*document.getElementById('close-overlay').addEventListener('click', function () {
+document.getElementById('close-overlay').addEventListener('click', function () {
   document.getElementById('meta-overlay').style.display = 'none';
-});*/
+});
   
-window.addEventListener('DOMContentLoaded', loadMetaData);
+//window.addEventListener('DOMContentLoaded', loadMetaData);
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadND3File(createMergedPLYViewer);
+});
+
 
 document.addEventListener("DOMContentLoaded", function () {
   let plyViewerInstance = null;
@@ -418,6 +387,9 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector(`.menu-item[data-view="${view}"]`).classList.add("selected");
   }
 
+ 
+  
+
   document.querySelectorAll(".menu-item").forEach(item => {
     item.addEventListener("click", function () {
       const view = this.getAttribute("data-view");
@@ -440,3 +412,13 @@ function resizePLYViewer() {
     }
   }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const logView = document.getElementById("logview");
+  const closeButton = document.getElementById("close-logview");
+
+  closeButton.addEventListener("click", function () {
+    logView.classList.toggle("minimized"); // Toggle minimized class
+  });
+});
+
