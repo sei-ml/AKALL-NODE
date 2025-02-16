@@ -287,7 +287,6 @@ html, body {
   background-color: #888;
 }
 
-/* Minimized state for logview */
 .console-overlay.minimized {
   height: 30px; 
   width: 50%; 
