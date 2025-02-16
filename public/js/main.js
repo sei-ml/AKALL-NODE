@@ -10,17 +10,11 @@ import {
 
 window.showOrientationHelper = false;
 
-setupGlobalUIListeners();
-setupLayoutAdjustment();
-
 document.addEventListener('DOMContentLoaded', () => {
   loadND3File(createPLYViewer);
-});
-
-document.addEventListener("DOMContentLoaded", () => {
   setupViewSwitching(createPLYViewer, resizePLYViewer);
+  setupLogView();
+  setupGlobalUIListeners();
+  setupLayoutAdjustment();
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  setupLogView();
-});

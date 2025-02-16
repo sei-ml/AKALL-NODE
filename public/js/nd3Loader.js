@@ -1,4 +1,3 @@
-// nd3Loader.js
 export async function loadND3File(createMergedPLYViewerFn) {
     try {
       const response = await fetch('/watch/processed/C_LS180_Y0_LO-1739322269902/meta.json');
@@ -7,17 +6,20 @@ export async function loadND3File(createMergedPLYViewerFn) {
       }
       const meta = await response.json();
       console.log("ND3 Meta Data Loaded:", meta);
-  
+      
+      // Store meta data globally
+      window.metaData = meta;
+    
       const parts = meta.processedPath.split('/');
       const folderName = parts[parts.length - 1];
       const relativePath = "/watch/processed/" + folderName + "/";
-  
+    
       // Update image sources.
       document.getElementById('img-original').src = relativePath + meta.outputs.originalJPEG;
       document.getElementById('img-blue').src = relativePath + meta.outputs.channels.blue;
       document.getElementById('img-green').src = relativePath + meta.outputs.channels.green;
       document.getElementById('img-red').src = relativePath + meta.outputs.channels.red;
-  
+    
       if (meta.outputs.rawConverted?.length) {
         document.getElementById('img-grayscale').src = relativePath + meta.outputs.rawConverted[0];
         document.getElementById('img-grayscale-2').src =
@@ -28,13 +30,12 @@ export async function loadND3File(createMergedPLYViewerFn) {
         document.getElementById('img-grayscale').src = relativePath + meta.outputs.originalJPEG;
         document.getElementById('img-grayscale-2').src = relativePath + meta.outputs.originalJPEG;
       }
-  
+    
       // Initialize the PLY viewer if ND3 reconstruction data is available.
       if (meta.outputs.nd3Reconstruction?.length) {
-        // Use the passed-in function.
         createMergedPLYViewerFn("ply-viewer-merged", relativePath + meta.outputs.nd3Reconstruction[0].ply);
       }
-  
+    
       // Update meta info display.
       const metaContent = document.getElementById('meta-content');
       metaContent.innerHTML = `
@@ -47,7 +48,7 @@ export async function loadND3File(createMergedPLYViewerFn) {
         </p>
         <p><strong>Raw Converted Files:</strong> ${meta.outputs.rawConverted.join(', ')}</p>
       `;
-  
+    
       return meta;
     } catch (err) {
       console.error('Error loading ND3 meta file:', err);

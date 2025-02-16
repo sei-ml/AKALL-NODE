@@ -63,7 +63,6 @@ export function toggleMetaOverlay() {
         document.querySelector(".scene-section").style.display = "grid";
         document.getElementById("fullScreenPLYViewer").style.display = "none";
         toggleView3Elements(false);
-        // Turn off orientation helper.
         window.showOrientationHelper = false;
       },
       view2: () => {
@@ -81,18 +80,18 @@ export function toggleMetaOverlay() {
         window.showOrientationHelper = true;
         if (!plyViewerInstance) {
           console.log("Initializing full-screen Three.js viewer...");
-          fetch('/watch/processed/C_LS180_Y0_LO-1739322269902/meta.json')
-            .then(response => response.json())
-            .then(meta => {
-              const parts = meta.processedPath.split('/');
-              const folderName = parts[parts.length - 1];
-              const relativePath = "/watch/processed/" + folderName + "/";
-              if (meta.outputs.nd3Reconstruction?.length) {
-                // Use the passed-in viewer creation function.
-                plyViewerInstance = createPLYViewerFn("fullScreenPLYViewer", relativePath + meta.outputs.nd3Reconstruction[0].ply);
-              }
-            })
-            .catch(err => console.error('Error loading meta.json:', err));
+          
+          if (window.metaData) {
+            const meta = window.metaData;
+            const parts = meta.processedPath.split('/');
+            const folderName = parts[parts.length - 1];
+            const relativePath = "/watch/processed/" + folderName + "/";
+            if (meta.outputs.nd3Reconstruction?.length) {
+              plyViewerInstance = createPLYViewerFn("fullScreenPLYViewer", relativePath + meta.outputs.nd3Reconstruction[0].ply);
+            }
+          } else {
+            console.error("Meta data is not loaded yet!");
+          }
         } else {
           resizePLYViewerFn();
         }
@@ -100,14 +99,11 @@ export function toggleMetaOverlay() {
     };
   
     function switchView(view) {
-      // Remove existing view classes from body.
       Object.keys(views).forEach(v => {
         document.body.classList.remove(v);
       });
       document.body.classList.add(view);
-      // Execute the view's configuration.
       views[view]();
-      // Update menu-item selection.
       document.querySelectorAll(".menu-item").forEach(item => {
         item.classList.remove("selected");
       });
@@ -116,7 +112,6 @@ export function toggleMetaOverlay() {
       if (selectedItem) selectedItem.classList.add("selected");
     }
   
-    // Set up click listeners on all menu items.
     document.querySelectorAll(".menu-item").forEach(item => {
       item.addEventListener("click", function () {
         const view = this.getAttribute("data-view");
@@ -124,7 +119,6 @@ export function toggleMetaOverlay() {
       });
     });
   
-    // Set default view on load.
     switchView("view2");
   }
   
