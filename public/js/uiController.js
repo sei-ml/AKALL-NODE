@@ -182,15 +182,56 @@ function populateMultiview() {
   // Clear previous content.
   multiview.innerHTML = "";
   
+  // Create three rows: top, center, and bottom.
+  const topDiv = document.createElement("div");
+  topDiv.className = "multiview-top";
+  topDiv.style.height = "20%";
+  topDiv.style.display = "flex";
+  topDiv.style.alignItems = "center";
+  topDiv.style.justifyContent = "center";
+  topDiv.innerText = "Top Text (20% of screen)";
+  
+  const centerDiv = document.createElement("div");
+  centerDiv.className = "multiview-center";
+  centerDiv.style.height = "60%";
+  centerDiv.style.position = "relative";
+  centerDiv.style.overflow = "hidden";
+  
+  const bottomDiv = document.createElement("div");
+  bottomDiv.className = "multiview-bottom";
+  bottomDiv.style.height = "20%";
+  bottomDiv.style.display = "flex";
+  bottomDiv.style.alignItems = "center";
+  bottomDiv.style.justifyContent = "center";
+  bottomDiv.innerText = "Bottom Text (20% of screen)";
+  
+  // Create a carousel container inside the center row.
+  const carousel = document.createElement("div");
+  carousel.className = "film-carousel";
+  carousel.style.height = "100%";
+  carousel.style.display = "flex";
+  carousel.style.overflowX = "auto";
+  carousel.style.whiteSpace = "nowrap";
+  carousel.style.boxSizing = "border-box";
+  carousel.style.padding = "10px";
+  
+  // Add a wheel event listener: translate vertical scrolling into horizontal scrolling.
+  carousel.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    carousel.scrollLeft += e.deltaY;
+  });
+  
+  const centerRowHeight = window.innerHeight * 0.6;
+  const previewSize = centerRowHeight * 0.9;
+  
   // Get .ply file URLs from metaData.
   const meta = window.metaData;
   const parts = meta.processedPath.split('/');
   const folderName = parts[parts.length - 1];
   const relativePath = "/watch/processed/" + folderName + "/";
-
   let plyFiles = [];
-  if (window.metaData && window.metaData.outputs && window.metaData.outputs.nd3Reconstruction) {
-    plyFiles = window.metaData.outputs.nd3Reconstruction.map(item => relativePath + item.ply);
+  if (meta && meta.outputs && meta.outputs.nd3Reconstruction) {
+    plyFiles = meta.outputs.nd3Reconstruction.map(item => relativePath + item.ply);
   }
   
   // For demonstration, ensure at least 5 previews.
@@ -199,25 +240,54 @@ function populateMultiview() {
   }
   plyFiles = plyFiles.slice(0, 5);
   
-  // Create a container for the carousel.
-  const carousel = document.createElement("div");
-  carousel.className = "film-carousel";  // Style with CSS for horizontal scrolling.
-  
   // Create a preview canvas for each .ply file.
   plyFiles.forEach(plyUrl => {
-    const previewCanvas = createPLYPreview(plyUrl, 200, 200);
+    const previewCanvas = createPLYPreview(plyUrl, previewSize, previewSize);
     previewCanvas.className = "film-thumb";
+    previewCanvas.style.marginRight = "10px";
     carousel.appendChild(previewCanvas);
   });
   
-  multiview.appendChild(carousel);
+  // Append the carousel to the center row.
+  centerDiv.appendChild(carousel);
   
-  // Add a "Load More" button.
-  const loadMoreBtn = document.createElement("button");
-  loadMoreBtn.textContent = "Load More";
-  loadMoreBtn.className = "load-more";
-  loadMoreBtn.addEventListener("click", () => {
-    alert("Load more functionality coming soon!");
+  // Append the three rows to the multiview container.
+  multiview.appendChild(topDiv);
+  multiview.appendChild(centerDiv);
+  multiview.appendChild(bottomDiv);
+  
+  // Create left and right arrow buttons.
+  const leftArrow = document.createElement("button");
+  leftArrow.innerHTML = "&#9664;";
+  leftArrow.className = "carousel-arrow left-arrow";
+  leftArrow.style.position = "absolute";
+  leftArrow.style.left = "10px";
+  leftArrow.style.top = "50%";
+  leftArrow.style.transform = "translateY(-50%)";
+  leftArrow.style.zIndex = "10";
+  leftArrow.addEventListener("click", () => {
+    carousel.scrollBy({ left: -previewSize * 1.5, behavior: "smooth" });
   });
-  multiview.appendChild(loadMoreBtn);
+  
+  const rightArrow = document.createElement("button");
+  rightArrow.innerHTML = "&#9654;";
+  rightArrow.className = "carousel-arrow right-arrow";
+  rightArrow.style.position = "absolute";
+  rightArrow.style.right = "10px";
+  rightArrow.style.top = "50%";
+  rightArrow.style.transform = "translateY(-50%)";
+  rightArrow.style.zIndex = "10";
+  rightArrow.addEventListener("click", () => {
+    carousel.scrollBy({ left: previewSize * 1.5, behavior: "smooth" });
+  });
+  
+  // Append the carousel and arrow buttons to the center row.
+  centerDiv.appendChild(carousel);
+  centerDiv.appendChild(leftArrow);
+  centerDiv.appendChild(rightArrow);
+  
+  // Append the three rows to the multiview container.
+  multiview.appendChild(topDiv);
+  multiview.appendChild(centerDiv);
+  multiview.appendChild(bottomDiv);
 }
