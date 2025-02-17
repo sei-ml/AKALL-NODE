@@ -352,6 +352,28 @@ html, body {
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
+.film-carousel {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.film-thumb {
+  flex: 0 0 auto;
+  margin-right: 10px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.load-more {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 1rem;
+}
+
 body.view3 .top-section,
 body.view3 .scene-section {
     opacity: 0;
