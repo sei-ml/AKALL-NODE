@@ -183,9 +183,14 @@ function populateMultiview() {
   multiview.innerHTML = "";
   
   // Get .ply file URLs from metaData.
+  const meta = window.metaData;
+  const parts = meta.processedPath.split('/');
+  const folderName = parts[parts.length - 1];
+  const relativePath = "/watch/processed/" + folderName + "/";
+
   let plyFiles = [];
   if (window.metaData && window.metaData.outputs && window.metaData.outputs.nd3Reconstruction) {
-    plyFiles = window.metaData.outputs.nd3Reconstruction.map(item => item.ply);
+    plyFiles = window.metaData.outputs.nd3Reconstruction.map(item => relativePath + item.ply);
   }
   
   // For demonstration, ensure at least 5 previews.
