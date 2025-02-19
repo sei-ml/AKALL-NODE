@@ -203,7 +203,7 @@ function populateMultiview() {
   bottomDiv.style.display = "flex";
   bottomDiv.style.alignItems = "center";
   bottomDiv.style.justifyContent = "center";
-  bottomDiv.innerText = "Bottom Text (20% of screen)";
+  bottomDiv.innerText = "";
   
   // Create a carousel container inside the center row.
   const carousel = document.createElement("div");
