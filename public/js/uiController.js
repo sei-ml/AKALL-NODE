@@ -92,7 +92,9 @@ export function setupViewSwitching(createPLYViewerFn, resizePLYViewerFn) {
       window.showOrientationHelper = false;
     },
     // Full-screen PLY viewer (view3).
+    // Full-screen PLY viewer (view3).
     view3: () => {
+      // Hide all other containers.
       const gridContainer = document.querySelector(".grid-container");
       if (gridContainer) gridContainer.style.display = "none";
       const topSection = document.querySelector(".top-section");
@@ -103,27 +105,43 @@ export function setupViewSwitching(createPLYViewerFn, resizePLYViewerFn) {
       if (multiview) multiview.style.display = "none";
       const fullScreenContainer = document.getElementById("fullScreenPLYViewer");
       if (fullScreenContainer) fullScreenContainer.style.display = "block";
-  
+    
       toggleView3Elements(true);
       window.showOrientationHelper = true;
-  
-      if (!plyViewerInstance) {
-        console.log("Initializing full-screen Three.js viewer...");
-        if (window.metaData) {
-          const meta = window.metaData;
-          const parts = meta.processedPath.split('/');
-          const folderName = parts[parts.length - 1];
-          const relativePath = "/watch/processed/" + folderName + "/";
-          if (meta.outputs.nd3Reconstruction?.length) {
-            plyViewerInstance = createPLYViewerFn("fullScreenPLYViewer", relativePath + meta.outputs.nd3Reconstruction[0].ply);
+    
+      // Determine which ply URL to load.
+      let plyUrlToLoad;
+      if (window.selectedPlyUrl) {
+        plyUrlToLoad = window.selectedPlyUrl;
+      } else if (window.metaData) {
+        const meta = window.metaData;
+        const parts = meta.processedPath.split('/');
+        const folderName = parts[parts.length - 1];
+        const relativePath = "/watch/processed/" + folderName + "/";
+        if (meta.outputs.nd3Reconstruction?.length) {
+          plyUrlToLoad = relativePath + meta.outputs.nd3Reconstruction[0].ply;
+        }
+      }
+    
+      if (plyUrlToLoad) {
+        // If the new URL is different from what is currently loaded, reinitialize.
+        if (!plyViewerInstance || window.currentPlyUrl !== plyUrlToLoad) {
+          window.currentPlyUrl = plyUrlToLoad;
+          // Reset the full-screen container so that createPLYViewer will reinitialize.
+          const fullScreenContainer = document.getElementById("fullScreenPLYViewer");
+          if (fullScreenContainer) {
+            fullScreenContainer.innerHTML = "";
+            fullScreenContainer.dataset.initialized = "false";
           }
+          plyViewerInstance = createPLYViewerFn("fullScreenPLYViewer", plyUrlToLoad);
         } else {
-          console.error("Meta data is not loaded yet!");
+          resizePLYViewerFn();
         }
       } else {
-        resizePLYViewerFn();
+        console.error("No PLY URL available to load in view3.");
       }
     }
+    
   };
   
   function switchView(view) {
@@ -189,7 +207,7 @@ function populateMultiview() {
   topDiv.style.display = "flex";
   topDiv.style.alignItems = "center";
   topDiv.style.justifyContent = "center";
-  topDiv.innerText = "Top Text (20% of screen)";
+  topDiv.innerText = "";
   
   const centerDiv = document.createElement("div");
   centerDiv.className = "multiview-center";
@@ -215,14 +233,15 @@ function populateMultiview() {
   carousel.style.boxSizing = "border-box";
   carousel.style.padding = "10px";
   
-  // Add a wheel event listener: translate vertical scrolling into horizontal scrolling.
+  // Translate vertical scrolling into horizontal scrolling.
   carousel.addEventListener("wheel", (e) => {
     e.preventDefault();
     carousel.scrollLeft += e.deltaY;
   });
   
-  const centerRowHeight = window.innerHeight * 0.6;
-  const previewSize = centerRowHeight * 0.9;
+  // Compute the preview size relative to the center row height.
+  const centerRowHeight = window.innerHeight * 0.6; // 60% of screen height.
+  const previewSize = centerRowHeight * 0.9; // Previews take 90% of center row height.
   
   // Get .ply file URLs from metaData.
   const meta = window.metaData;
@@ -235,16 +254,26 @@ function populateMultiview() {
   }
   
   // For demonstration, ensure at least 5 previews.
-  while (plyFiles.length < 5) {
+  while (plyFiles.length < 4) {
     plyFiles = plyFiles.concat(plyFiles);
   }
-  plyFiles = plyFiles.slice(0, 5);
+  plyFiles = plyFiles.slice(0, 4);
   
   // Create a preview canvas for each .ply file.
   plyFiles.forEach(plyUrl => {
     const previewCanvas = createPLYPreview(plyUrl, previewSize, previewSize);
     previewCanvas.className = "film-thumb";
     previewCanvas.style.marginRight = "10px";
+    // Make each preview clickable:
+    previewCanvas.addEventListener("click", () => {
+      // Store the selected PLY URL globally.
+      window.selectedPlyUrl = plyUrl;
+      // Simulate a click on the menu item for view3 to switch to full-screen viewer.
+      const view3MenuItem = document.querySelector('.menu-item[data-view="view3"]');
+      if (view3MenuItem) {
+        view3MenuItem.click();
+      }
+    });
     carousel.appendChild(previewCanvas);
   });
   
@@ -281,13 +310,7 @@ function populateMultiview() {
     carousel.scrollBy({ left: previewSize * 1.5, behavior: "smooth" });
   });
   
-  // Append the carousel and arrow buttons to the center row.
-  centerDiv.appendChild(carousel);
+  // Append arrow buttons to the center row.
   centerDiv.appendChild(leftArrow);
   centerDiv.appendChild(rightArrow);
-  
-  // Append the three rows to the multiview container.
-  multiview.appendChild(topDiv);
-  multiview.appendChild(centerDiv);
-  multiview.appendChild(bottomDiv);
 }
