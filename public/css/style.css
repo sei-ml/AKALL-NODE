@@ -291,12 +291,12 @@ html, body {
 }
 
 a{
-  color: #d7dda1;
+  color: #eee;
   text-decoration: none;
 }
 
 a:hover{
-  color: #eee;
+  color: #fff;
   text-decoration: underline;
 }
 
