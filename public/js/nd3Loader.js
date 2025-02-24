@@ -60,8 +60,8 @@ export async function loadND3File(createMergedPLYViewerFn) {
     <span class="meta-highlight">COLOR RES</span> ${akallDetails.colorResolution || 'N/A'} <span class="meta-highlight">DEPTH MODE</span> ${akallDetails.depthMode || 'N/A'} </br>
     <span class="meta-highlight">DEPTH RES:</span> ${akallDetails.resolution || 'N/A'} <span class="meta-highlight">FOI:</span> ${akallDetails.foi || 'N/A'} <span class="meta-highlight">RANGE</span> ${akallDetails.range || 'N/A'} 
     <span class="meta-highlight">EXPOSURE</span> ${akallDetails.exposure || 'N/A'} </br>
-    <span>3D RECONSRUCTION</span></br>
-    <span class="meta-success">.PLY</span> ${nd3Reconstruction.length > 0 ? nd3Reconstruction.map(recon => `${recon.colorImage} → ${recon.ply}`).join('<br>') : 'N/A'}
+    <span>--------------------------------------------------------</span></br>
+    <span class="meta-success">3D RECONSRUCTION (.JPG, .PLY)</span> ${nd3Reconstruction.length > 0 ? nd3Reconstruction.map(recon => `${recon.colorImage} → ${recon.ply}`).join('<br>') : 'N/A'}
     `;
 
     return meta;
