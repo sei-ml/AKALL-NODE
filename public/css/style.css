@@ -256,7 +256,7 @@ html, body {
   background: rgba(0, 0, 0, 0.85);
   color: #fff;
   z-index: 10000;
-  padding: 5px;
+  padding: 10px;
   font-family: monospace;
   display: none;
   opacity: 0.5;
@@ -265,10 +265,24 @@ html, body {
   line-height: 1.2;
 }
 
+/* Two-column layout for meta content */
+.console-overlay .log-content {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 20px; /* Space between columns */
+  padding: 10px;
+}
+
+.console-overlay .log-column {
+  flex: 1;  /* Each column takes equal space */
+  min-width: 50%; /* Forces two columns */
+}
+
+/* Ensure text stays readable and wraps properly */
 .console-overlay p {
   margin: 0.2em 0;
   white-space: normal;
-  word-break: break-all;
+  word-break: break-word;
 }
 
 .console-overlay .close-button {
@@ -283,13 +297,14 @@ html, body {
   cursor: pointer;
 }
 
-.close-button:hover{
+.close-button:hover {
   background-color: #888;
 }
 
+/* Minimized state */
 .console-overlay.minimized {
-  height: 30px; 
-  width: 50%; 
+  height: 30px;
+  width: 50%;
   overflow: hidden;
   opacity: 0.7;
   padding: 5px;
@@ -301,7 +316,7 @@ html, body {
 }
 
 .console-overlay .log-content {
-  padding: 30px 20px;
+  padding: 20px;
 }
 
 #topbar {
