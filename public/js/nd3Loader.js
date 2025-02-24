@@ -51,32 +51,17 @@ export async function loadND3File(createMergedPLYViewerFn) {
     // Update Meta Information Display with futuristic console-like appearance
     const metaContent = document.getElementById('meta-content');
     metaContent.innerHTML = `
-      <span class="meta-highlight">Captured:</span> ${meta.timestamp?.humanReadable || 'N/A'} <br>
-      <span class="meta-highlight">Unix Timestamp:</span> ${meta.timestamp?.unix || 'N/A'} <br>
-
-      <span class="meta-success">Original Image:</span> ${outputs.originalJPEG || 'N/A'} <br>
-      <span class="meta-highlight">🔵 Blue Channel:</span> ${blueImage} <br>
-      <span class="meta-highlight">🟢 Green Channel:</span> ${greenImage} <br>
-      <span class="meta-highlight">🔴 Red Channel:</span> ${redImage} <br>
-
-      <span class="meta-warning">Depth Image:</span> ${depthImage} <br>
-      <span class="meta-warning">NIR Image:</span> ${nirImage} <br>
-
-      <span class="meta-success">AKALL Command:</span> ${meta.akallCommand || 'N/A'} <br>
-      <span class="meta-highlight">FPS:</span> ${akallDetails.fps || 'N/A'} 
-      <span class="meta-highlight">Compression:</span> ${akallDetails.compression || 'N/A'} <br>
-      <span class="meta-highlight">Color Resolution:</span> ${akallDetails.colorResolution || 'N/A'} <br>
-      <span class="meta-highlight">Depth Mode:</span> ${akallDetails.depthMode || 'N/A'} <br>
-      <span class="meta-highlight">Resolution:</span> ${akallDetails.resolution || 'N/A'} <br>
-      <span class="meta-highlight">FoI:</span> ${akallDetails.foi || 'N/A'} <br>
-      <span class="meta-highlight">Range:</span> ${akallDetails.range || 'N/A'} <br>
-      <span class="meta-highlight">Exposure:</span> ${akallDetails.exposure || 'N/A'} <br>
-
-      <span class="meta-success">ND3 Files:</span> ${nd3Reconstruction.length > 0 ? nd3Reconstruction.map(recon => `${recon.colorImage} → ${recon.ply}`).join('<br>') : 'N/A'} <br>
-
-      <span class="meta-highlight">Raw Files:</span> ${rawConverted.length > 0 ? rawConverted.join(', ') : 'N/A'}
+      <span class="meta-highlight">DATE</span> ${meta.timestamp?.humanReadable || 'N/A'} <span class="meta-highlight">UNIX </span> ${meta.timestamp?.unix || 'N/A'} 
+      <span class="meta-success">COLOR</span> ${outputs.originalJPEG || 'N/A'} 
+      <span class="meta-highlight">B</span> ${blueImage} <span class="meta-highlight">G</span> ${greenImage} <span class="meta-highlight">R</span> ${redImage} 
+      <span class="meta-warning">D</span> ${depthImage} <span class="meta-warning">NIR</span> ${nirImage} 
+      <span class="meta-success">CMD</span> ${meta.akallCommand || 'N/A'} <span class="meta-highlight">FPS</span> ${akallDetails.fps || 'N/A'} <span class="meta-highlight">COMP</span> ${akallDetails.compression || 'N/A'} 
+      <span class="meta-highlight">COL_RES</span> ${akallDetails.colorResolution || 'N/A'} <span class="meta-highlight">DM</span> ${akallDetails.depthMode || 'N/A'} 
+      <span class="meta-highlight">DEPTH_RES:</span> ${akallDetails.resolution || 'N/A'} <span class="meta-highlight">FoI:</span> ${akallDetails.foi || 'N/A'} <span class="meta-highlight">R</span> ${akallDetails.range || 'N/A'} 
+      <span class="meta-highlight">EXP</span> ${akallDetails.exposure || 'N/A'} 
+      <span class="meta-success">ND3</span> ${nd3Files} 
+      <span class="meta-highlight">RAW</span> ${rawFiles}
     `;
-
     return meta;
   } catch (err) {
     console.error('Error loading ND3 meta file:', err);
