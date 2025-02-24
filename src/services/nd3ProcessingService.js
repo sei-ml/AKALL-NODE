@@ -10,11 +10,12 @@ const PROCESSED_DIR = process.env.PROCESSED_DIR || './watch/processed';
  * AKALL Depth Mode Lookup Table
  */
 const AKALL_DEPTH_MODES = {
-    "NFOV_2x2BINNED": { mode: "NFOV 2x2 binned (SW)", resolution: "320x288", foi: "75°x65°", range: "0.5 - 5.46 m", exposure: "12.8 ms" },
-    "NFOV_UNBINNED": { mode: "NFOV unbinned", resolution: "640x576", foi: "75°x65°", range: "0.5 - 3.86 m", exposure: "12.8 ms" },
-    "WFOV_2x2BINNED": { mode: "WFOV 2x2 binned", resolution: "512x512", foi: "120°x120°", range: "0.25 - 2.88 m", exposure: "12.8 ms" },
-    "WFOV_UNBINNED": { mode: "WFOV unbinned", resolution: "1024x1024", foi: "120°x120°", range: "0.25 - 2.21 m", exposure: "20.3 ms" },
-    "PASSIVE_IR": { mode: "Passive IR", resolution: "1024x1024", foi: "N/A", range: "N/A", exposure: "1.6 ms" }
+    "OFF": { id: "0", mode: "OFF", resolution: "N/A", foi: "N/A", range: "N/A", exposure: "N/A" },
+    "NFOV_2x2BINNED": { id: "1", mode: "NFOV 2x2 binned (SW)", resolution: "320x288", foi: "75°x65°", range: "0.5 - 5.46 m", exposure: "12.8 ms" },
+    "NFOV_UNBINNED": { id: "2", mode: "NFOV unbinned", resolution: "640x576", foi: "75°x65°", range: "0.5 - 3.86 m", exposure: "12.8 ms" },
+    "WFOV_2x2BINNED": { id: "3", mode: "WFOV 2x2 binned", resolution: "512x512", foi: "120°x120°", range: "0.25 - 2.88 m", exposure: "12.8 ms" },
+    "WFOV_UNBINNED": { id: "4", mode: "WFOV unbinned", resolution: "1024x1024", foi: "120°x120°", range: "0.25 - 2.21 m", exposure: "20.3 ms" },
+    "PASSIVE_IR": { id: "5", mode: "Passive IR", resolution: "1024x1024", foi: "N/A", range: "N/A", exposure: "1.6 ms" }
 };
 
 /**
@@ -22,14 +23,15 @@ const AKALL_DEPTH_MODES = {
  */
 function parseAkallCommand(jpegFilename, depthFilename) {
     const akallParams = {
-        fps: "05",  // Hardcoded FPS
+        fps: "05", 
         compression: null,
         colorResolution: null,
         depthMode: null,
         resolution: null,
         foi: null,
         range: null,
-        exposure: null
+        exposure: null,
+        depthModeId: null
     };
 
     // Extract compression and color resolution from JPEG filename
@@ -43,8 +45,8 @@ function parseAkallCommand(jpegFilename, depthFilename) {
     // Extract depth mode from depth PNG filename
     const depthMatch = depthFilename.match(/D(\d+)(\d+)(WFOV_UNBINNED|NFOV_UNBINNED|WFOV_2x2BINNED|NFOV_2x2BINNED|PASSIVE_IR)\.png$/);
     if (depthMatch) {
-        const depthModeKey = depthMatch[3]; // Depth mode (matches one of the AKALL_DEPTH_MODES)
-        
+        const depthModeKey = depthMatch[3]; // Depth mode key
+
         if (AKALL_DEPTH_MODES[depthModeKey]) {
             const depthInfo = AKALL_DEPTH_MODES[depthModeKey];
             akallParams.depthMode = depthInfo.mode;
@@ -52,12 +54,13 @@ function parseAkallCommand(jpegFilename, depthFilename) {
             akallParams.foi = depthInfo.foi;
             akallParams.range = depthInfo.range;
             akallParams.exposure = depthInfo.exposure;
+            akallParams.depthModeId = depthInfo.id; // Store the depth mode ID
         }
     }
 
-    // Construct AKALL Command
-    if (akallParams.compression && akallParams.colorResolution && akallParams.depthMode) {
-        akallParams.akallCommand = `K${akallParams.fps}${akallParams.compression}${akallParams.colorResolution}${akallParams.resolution.replace('x', '')}${akallParams.depthMode.replace(/\s+/g, '_')}`;
+    // Construct AKALL Command with depthModeId as the last digit
+    if (akallParams.compression && akallParams.colorResolution && akallParams.depthModeId) {
+        akallParams.akallCommand = `K${akallParams.fps}${akallParams.compression}${akallParams.colorResolution}${akallParams.depthModeId}`;
     } else {
         akallParams.akallCommand = "Unknown";
     }
@@ -108,11 +111,6 @@ async function processNd3File(filePath, io) {
         !file.startsWith('R_')
     );
 
-    // Identify channel images
-    const blueImage = processedFiles.find(file => file.startsWith('B_') && file.toLowerCase().endsWith('.jpeg'));
-    const greenImage = processedFiles.find(file => file.startsWith('G_') && file.toLowerCase().endsWith('.jpeg'));
-    const redImage = processedFiles.find(file => file.startsWith('R_') && file.toLowerCase().endsWith('.jpeg'));
-
     // Identify depth image (PNG format)
     const depthImage = processedFiles.find(file => file.toLowerCase().endsWith('.png') && file.includes('D'));
 
@@ -155,11 +153,6 @@ async function processNd3File(filePath, io) {
         akallDetails: akallParams,
         outputs: {
             originalJPEG: originalJPEG || null,
-            channels: {
-                blue: blueImage || null,
-                green: greenImage || null,
-                red: redImage || null
-            },
             nd3Reconstruction: nd3Reconstruction,
             rawConverted: rawConverted
         }
