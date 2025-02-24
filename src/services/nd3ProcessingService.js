@@ -7,36 +7,57 @@ const shellCommandService = require('./shellCommandService');
 const PROCESSED_DIR = process.env.PROCESSED_DIR || './watch/processed';
 
 /**
+ * AKALL Depth Mode Lookup Table
+ */
+const AKALL_DEPTH_MODES = {
+    "NFOV_2x2BINNED": { mode: "NFOV 2x2 binned (SW)", resolution: "320x288", foi: "75°x65°", range: "0.5 - 5.46 m", exposure: "12.8 ms" },
+    "NFOV_UNBINNED": { mode: "NFOV unbinned", resolution: "640x576", foi: "75°x65°", range: "0.5 - 3.86 m", exposure: "12.8 ms" },
+    "WFOV_2x2BINNED": { mode: "WFOV 2x2 binned", resolution: "512x512", foi: "120°x120°", range: "0.25 - 2.88 m", exposure: "12.8 ms" },
+    "WFOV_UNBINNED": { mode: "WFOV unbinned", resolution: "1024x1024", foi: "120°x120°", range: "0.25 - 2.21 m", exposure: "20.3 ms" },
+    "PASSIVE_IR": { mode: "Passive IR", resolution: "1024x1024", foi: "N/A", range: "N/A", exposure: "1.6 ms" }
+};
+
+/**
  * Function to extract AKALL parameters from filenames
  */
 function parseAkallCommand(jpegFilename, depthFilename) {
     const akallParams = {
-        fps: null,
+        fps: "05",  // Hardcoded FPS
         compression: null,
         colorResolution: null,
-        depthResolution: null,
-        depthMode: null
+        depthMode: null,
+        resolution: null,
+        foi: null,
+        range: null,
+        exposure: null
     };
 
-    // Extract FPS, compression, and color resolution from JPEG filename
-    const jpegMatch = jpegFilename.match(/(\d+)(MJPG|YUY2|NV12)(\d+)P\.jpeg$/);
+    // Extract compression and color resolution from JPEG filename
+    const jpegMatch = jpegFilename.match(/C(\d+)(MJPG|YUY2|NV12)(\d+)P\.jpeg$/);
     if (jpegMatch) {
-        akallParams.fps = jpegMatch[1];  // FPS
+        akallParams.fps = jpegMatch[1];  // FPS (hardcoded, but keeping logic)
         akallParams.compression = jpegMatch[2]; // Compression type
         akallParams.colorResolution = jpegMatch[3]; // Color resolution height
     }
 
-    // Extract Depth resolution and mode from PNG depth filename
-    const depthMatch = depthFilename.match(/D(\d+)(\d+)(WFOV_UNBINNED|WFOV_BINNED|NFOV_UNBINNED|NFOV_BINNED|PASSIVE_IR)\.png$/);
+    // Extract depth mode from depth PNG filename
+    const depthMatch = depthFilename.match(/D(\d+)(\d+)(WFOV_UNBINNED|NFOV_UNBINNED|WFOV_2x2BINNED|NFOV_2x2BINNED|PASSIVE_IR)\.png$/);
     if (depthMatch) {
-        akallParams.fps = depthMatch[1] || akallParams.fps;  // FPS (if present)
-        akallParams.depthResolution = depthMatch[2]; // Depth resolution
-        akallParams.depthMode = depthMatch[3]; // Depth mode
+        const depthModeKey = depthMatch[3]; // Depth mode (matches one of the AKALL_DEPTH_MODES)
+        
+        if (AKALL_DEPTH_MODES[depthModeKey]) {
+            const depthInfo = AKALL_DEPTH_MODES[depthModeKey];
+            akallParams.depthMode = depthInfo.mode;
+            akallParams.resolution = depthInfo.resolution;
+            akallParams.foi = depthInfo.foi;
+            akallParams.range = depthInfo.range;
+            akallParams.exposure = depthInfo.exposure;
+        }
     }
 
     // Construct AKALL Command
-    if (akallParams.fps && akallParams.compression && akallParams.colorResolution && akallParams.depthResolution && akallParams.depthMode) {
-        akallParams.akallCommand = `K${akallParams.fps}${akallParams.compression}${akallParams.colorResolution}${akallParams.depthResolution}${akallParams.depthMode}`;
+    if (akallParams.compression && akallParams.colorResolution && akallParams.depthMode) {
+        akallParams.akallCommand = `K${akallParams.fps}${akallParams.compression}${akallParams.colorResolution}${akallParams.resolution.replace('x', '')}${akallParams.depthMode.replace(/\s+/g, '_')}`;
     } else {
         akallParams.akallCommand = "Unknown";
     }
@@ -51,7 +72,7 @@ async function processNd3File(filePath, io) {
     console.log(`Processing file: ${filePath}`);
 
     const baseName = path.basename(filePath, '.tar.gz');
-    const uniqueId = Date.now().toString(); // or use uuid
+    const uniqueId = Date.now().toString();
     const outputDir = path.join(PROCESSED_DIR, `${baseName}-${uniqueId}`);
 
     fs.mkdirSync(outputDir, { recursive: true });
@@ -95,10 +116,9 @@ async function processNd3File(filePath, io) {
     // Identify depth image (PNG format)
     const depthImage = processedFiles.find(file => file.toLowerCase().endsWith('.png') && file.includes('D'));
 
-    // Gather ND3 reconstruction outputs: assume these are all .ply files
+    // Gather ND3 reconstruction outputs
     const plyFiles = processedFiles.filter(file => file.toLowerCase().endsWith('.ply'));
 
-    // For each ply file, associate the corresponding color image
     const nd3Reconstruction = plyFiles.map(plyFile => {
         return {
             ply: plyFile,
@@ -114,7 +134,7 @@ async function processNd3File(filePath, io) {
     if (originalJPEG) {
         const match = originalJPEG.match(/^(\d+)/);
         if (match) {
-            timestamp = match[1]; // Unix timestamp
+            timestamp = match[1];
         }
     }
 
