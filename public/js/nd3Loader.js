@@ -32,6 +32,10 @@ export async function loadND3File(createMergedPLYViewerFn) {
     const depthImage = outputs.depth || rawConverted.find(img => img.includes('D')) || 'N/A';
     const nirImage = outputs.nir || rawConverted.find(img => img.includes('IR')) || 'N/A';
 
+    // Function to create hyperlink
+    const createLink = (filename) =>
+      filename !== 'N/A' ? `<a href="${relativePath + filename}" target="_blank">${filename}</a>` : 'N/A';
+
     // Update Image Sources in UI
     document.getElementById('img-original').src = relativePath + (outputs.originalJPEG || '');
     document.getElementById('img-blue').src = blueImage !== 'N/A' ? relativePath + blueImage : '';
@@ -48,20 +52,29 @@ export async function loadND3File(createMergedPLYViewerFn) {
     // Ensure AKALL command details exist
     const akallDetails = meta.akallDetails || {};
 
-    // Update Meta Information Display with futuristic console-like appearance
+    // Format ND3 Reconstruction and Raw Files into inline text with links
+    const nd3Files = nd3Reconstruction.length > 0
+      ? nd3Reconstruction.map(recon => `${createLink(recon.colorImage)} → ${createLink(recon.ply)}`).join(' | ')
+      : 'N/A';
+
+    const rawFiles = rawConverted.length > 0
+      ? rawConverted.map(file => createLink(file)).join(', ')
+      : 'N/A';
+
+    // Update Meta Information Display with hyperlinks
     const metaContent = document.getElementById('meta-content');
     metaContent.innerHTML = `
-    <span class="meta-highlight">DATE</span> ${meta.timestamp?.humanReadable || 'N/A'} <span class="meta-highlight">UNIX </span> ${meta.timestamp?.unix || 'N/A'} </br>
-    <span class="meta-success">COLOR IMAGE</span> ${outputs.originalJPEG || 'N/A'} </br>
-    <span class="meta-blue" sytle="color:lightblue;">B CH</span> ${blueImage} <span class="meta-green" sytle="color:green;">G CH</span> ${greenImage} <span class="meta-red" sytle="color:red;">R CH</span> ${redImage} </br>
-    <span class="meta-warning">DEPTH</span> ${depthImage} <span class="meta-warning">NIR</span> ${nirImage} </br>
-    <span class="meta-highlight">RAW</span> ${rawConverted.length > 0 ? rawConverted.join(', ') : 'N/A'} </br>
+    <span class="meta-highlight">DATE</span> ${meta.timestamp?.humanReadable || 'N/A'} <span class="meta-highlight">UNIX </span> ${meta.timestamp?.unix || 'N/A'} 
+    <span class="meta-success">COLOR IMAGE</span> ${createLink(outputs.originalJPEG || 'N/A')} 
+    <span class="meta-blue" style="color:lightblue;">B CH</span> ${createLink(blueImage)} <span class="meta-green" style="color:green;">G CH</span> ${createLink(greenImage)} <span class="meta-red" style="color:red;">R CH</span> ${createLink(redImage)} 
+    <span class="meta-warning">DEPTH</span> ${createLink(depthImage)} <span class="meta-warning">NIR</span> ${createLink(nirImage)} 
+    <span class="meta-highlight">RAW</span> ${rawFiles} 
     <span class="meta-success">AKALL CMD</span> ${meta.akallCommand || 'N/A'} <span class="meta-highlight">FPS</span> ${akallDetails.fps || 'N/A'} <span class="meta-highlight">COMP</span> ${akallDetails.compression || 'N/A'} 
-    <span class="meta-highlight">COLOR RES</span> ${akallDetails.colorResolution || 'N/A'} <span class="meta-highlight">DEPTH MODE</span> ${akallDetails.depthMode || 'N/A'} </br>
+    <span class="meta-highlight">COLOR RES</span> ${akallDetails.colorResolution || 'N/A'} <span class="meta-highlight">DEPTH MODE</span> ${akallDetails.depthMode || 'N/A'} 
     <span class="meta-highlight">DEPTH RES:</span> ${akallDetails.resolution || 'N/A'} <span class="meta-highlight">FOI:</span> ${akallDetails.foi || 'N/A'} <span class="meta-highlight">RANGE</span> ${akallDetails.range || 'N/A'} 
-    <span class="meta-highlight">EXPOSURE</span> ${akallDetails.exposure || 'N/A'} </br>
-    <span>--------------------------------------------------------</span></br>
-    <span class="meta-success">3D RECONSRUCTION (.JPG, .PLY)</span> ${nd3Reconstruction.length > 0 ? nd3Reconstruction.map(recon => `${recon.colorImage} → ${recon.ply}`).join('<br>') : 'N/A'}
+    <span class="meta-highlight">EXPOSURE</span> ${akallDetails.exposure || 'N/A'} 
+    <span>-----------------------------------------------------------------------</span>
+    <span class="meta-success">3D RECONSRUCTION (.JPG, .PLY)</span> ${nd3Files}
     `;
 
     return meta;
