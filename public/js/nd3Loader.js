@@ -64,16 +64,16 @@ export async function loadND3File(createMergedPLYViewerFn) {
     // Update Meta Information Display with hyperlinks
     const metaContent = document.getElementById('meta-content');
     metaContent.innerHTML = `
-    <span class="meta-highlight">DATE</span> ${meta.timestamp?.humanReadable || 'N/A'} <span class="meta-highlight">UNIX </span> ${meta.timestamp?.unix || 'N/A'} 
-    <span class="meta-success">COLOR IMAGE</span> ${createLink(outputs.originalJPEG || 'N/A')} 
-    <span class="meta-blue" style="color:lightblue;">B CH</span> ${createLink(blueImage)} <span class="meta-green" style="color:green;">G CH</span> ${createLink(greenImage)} <span class="meta-red" style="color:red;">R CH</span> ${createLink(redImage)} 
-    <span class="meta-warning">DEPTH</span> ${createLink(depthImage)} <span class="meta-warning">NIR</span> ${createLink(nirImage)} 
-    <span class="meta-highlight">RAW</span> ${rawFiles} 
-    <span class="meta-success">AKALL CMD</span> ${meta.akallCommand || 'N/A'} <span class="meta-highlight">FPS</span> ${akallDetails.fps || 'N/A'} <span class="meta-highlight">COMP</span> ${akallDetails.compression || 'N/A'} 
-    <span class="meta-highlight">COLOR RES</span> ${akallDetails.colorResolution || 'N/A'} <span class="meta-highlight">DEPTH MODE</span> ${akallDetails.depthMode || 'N/A'} 
+    <span class="meta-highlight">DATE</span> ${meta.timestamp?.humanReadable || 'N/A'} <span class="meta-highlight">UNIX </span> ${meta.timestamp?.unix || 'N/A'} </br>
+    <span class="meta-success">COLOR IMAGE</span> ${createLink(outputs.originalJPEG || 'N/A')} </br>
+    <span class="meta-blue" style="color:lightblue;">B CH</span> ${createLink(blueImage)} <span class="meta-green" style="color:green;">G CH</span> ${createLink(greenImage)} <span class="meta-red" style="color:red;">R CH</span> ${createLink(redImage)} </br>
+    <span class="meta-warning">DEPTH</span> ${createLink(depthImage)} <span class="meta-warning">NIR</span> ${createLink(nirImage)} </br>
+    <span class="meta-highlight">RAW</span> ${rawFiles} </br>
+    <span class="meta-success">AKALL CMD</span> ${meta.akallCommand || 'N/A'} <span class="meta-highlight">FPS</span> ${akallDetails.fps || 'N/A'} <span class="meta-highlight">COMP</span> ${akallDetails.compression || 'N/A'} </br>
+    <span class="meta-highlight">COLOR RES</span> ${akallDetails.colorResolution || 'N/A'} <span class="meta-highlight">DEPTH MODE</span> ${akallDetails.depthMode || 'N/A'} </br>
     <span class="meta-highlight">DEPTH RES:</span> ${akallDetails.resolution || 'N/A'} <span class="meta-highlight">FOI:</span> ${akallDetails.foi || 'N/A'} <span class="meta-highlight">RANGE</span> ${akallDetails.range || 'N/A'} 
-    <span class="meta-highlight">EXPOSURE</span> ${akallDetails.exposure || 'N/A'} 
-    <span>-----------------------------------------------------------------------</span>
+    <span class="meta-highlight">EXPOSURE</span> ${akallDetails.exposure || 'N/A'} </br>
+    <span>-----------------------------------------------------------------------</span> </br>
     <span class="meta-success">3D RECONSRUCTION (.JPG, .PLY)</span> ${nd3Files}
     `;
 
