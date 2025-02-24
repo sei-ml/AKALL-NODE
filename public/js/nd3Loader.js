@@ -54,9 +54,9 @@ export async function loadND3File(createMergedPLYViewerFn) {
     <span class="meta-highlight">DATE</span> ${meta.timestamp?.humanReadable || 'N/A'} <span class="meta-highlight">UNIX </span> ${meta.timestamp?.unix || 'N/A'} </br>
     <span class="meta-success">COLOR IMAGE</span> ${outputs.originalJPEG || 'N/A'} </br>
     <span class="meta-highlight">B CH</span> ${blueImage} <span class="meta-highlight">G CH</span> ${greenImage} <span class="meta-highlight">R CH</span> ${redImage} </br>
-    <span class="meta-warning">D</span> ${depthImage} <span class="meta-warning">NIR</span> ${nirImage} </br>
-    <span class="meta-success">CMD</span> ${meta.akallCommand || 'N/A'} <span class="meta-highlight">FPS</span> ${akallDetails.fps || 'N/A'} <span class="meta-highlight">COMP</span> ${akallDetails.compression || 'N/A'} 
-    <span class="meta-highlight">COLOR RES</span> ${akallDetails.colorResolution || 'N/A'} <span class="meta-highlight">DEPTH MODE</span> ${akallDetails.depthMode || 'N/A'} 
+    <span class="meta-warning">DEPTH</span> ${depthImage} <span class="meta-warning">NIR</span> ${nirImage} </br>
+    <span class="meta-success">AKALL CMD</span> ${meta.akallCommand || 'N/A'} <span class="meta-highlight">FPS</span> ${akallDetails.fps || 'N/A'} <span class="meta-highlight">COMP</span> ${akallDetails.compression || 'N/A'} 
+    <span class="meta-highlight">COLOR RES</span> ${akallDetails.colorResolution || 'N/A'} <span class="meta-highlight">DEPTH MODE</span> ${akallDetails.depthMode || 'N/A'} </br>
     <span class="meta-highlight">DEPTH RES:</span> ${akallDetails.resolution || 'N/A'} <span class="meta-highlight">FOI:</span> ${akallDetails.foi || 'N/A'} <span class="meta-highlight">RANGE</span> ${akallDetails.range || 'N/A'} 
     <span class="meta-highlight">EXPOSURE</span> ${akallDetails.exposure || 'N/A'} </br>
     <span class="meta-success">PLY</span> ${nd3Reconstruction.length > 0 ? nd3Reconstruction.map(recon => `${recon.colorImage} → ${recon.ply}`).join('<br>') : 'N/A'}
