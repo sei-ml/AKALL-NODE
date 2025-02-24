@@ -19,7 +19,7 @@ export async function loadND3File(createMergedPLYViewerFn) {
   
     const parts = meta.processedPath.split('/');
     const folderName = parts[parts.length - 1];
-    const relativePath = "/watch/processed/" + folderName + "/";
+    const relativePath = `/watch/processed/${folderName}/`;
   
     // Update image sources.
     document.getElementById('img-original').src = relativePath + meta.outputs.originalJPEG;
@@ -46,14 +46,39 @@ export async function loadND3File(createMergedPLYViewerFn) {
     // Update meta info display.
     const metaContent = document.getElementById('meta-content');
     metaContent.innerHTML = `
-      <p><strong>Timestamp:</strong> ${meta.timestamp}</p>
+
+      <p><strong>Capture Date/strong> ${meta.timestamp.humanReadable} (${meta.timestamp.unix})</p>
+      <h3>Color Image Details</h3>
       <p><strong>Original JPEG:</strong> ${meta.outputs.originalJPEG}</p>
-      <p><strong>Channels:</strong> Blue: ${meta.outputs.channels.blue}, Green: ${meta.outputs.channels.green}, Red: ${meta.outputs.channels.red}</p>
-      <p><strong>ND3 Reconstruction Outputs:</strong> 
-        ${meta.outputs.nd3Reconstruction.length > 0 ?
-          `${meta.outputs.nd3Reconstruction[0].colorImage} → ${meta.outputs.nd3Reconstruction[0].ply}` : ''}
-      </p>
-      <p><strong>Raw Converted Files:</strong> ${meta.outputs.rawConverted.join(', ')}</p>
+      <p><strong>Channels:</strong></p>
+      <ul>
+        <li><strong>Blue:</strong> ${meta.outputs.channels.blue}</li>
+        <li><strong>Green:</strong> ${meta.outputs.channels.green}</li>
+        <li><strong>Red:</strong> ${meta.outputs.channels.red}</li>
+      </ul>
+
+      <h3>AKALL Capture Command</h3>
+      <p><strong>Command:</strong> ${meta.akallCommand}</p>
+      <ul>
+        <li><strong>FPS:</strong> ${meta.akallDetails.fps}</li>
+        <li><strong>Compression:</strong> ${meta.akallDetails.compression}</li>
+        <li><strong>Color Resolution:</strong> ${meta.akallDetails.colorResolution}</li>
+        <li><strong>Depth Mode:</strong> ${meta.akallDetails.depthMode}</li>
+        <li><strong>Resolution:</strong> ${meta.akallDetails.resolution}</li>
+        <li><strong>Field of View (FoI):</strong> ${meta.akallDetails.foi}</li>
+        <li><strong>Range:</strong> ${meta.akallDetails.range}</li>
+        <li><strong>Exposure:</strong> ${meta.akallDetails.exposure}</li>
+      </ul>
+
+      <h3>ND3 Reconstruction Outputs</h3>
+      <ul>
+        ${meta.outputs.nd3Reconstruction.map(recon => `
+          <li>${recon.colorImage} → ${recon.ply}</li>
+        `).join('')}
+      </ul>
+
+      <h3>Raw Converted Files</h3>
+      <p>${meta.outputs.rawConverted.join(', ')}</p>
     `;
   
     return meta;
