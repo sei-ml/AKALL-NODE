@@ -291,18 +291,28 @@ html, body {
 }
 
 .meta-highlight {
-  color: #49c5b6; /* Futuristic Cyan */
+  color: #49c5b6a6;
   font-weight: bold;
 }
 
 .meta-success {
-  color: #8fd694; /* Neon Green */
+  color: #8fd694c9;
   font-weight: bold;
 }
 
 .meta-warning {
-  color: #e68a00; /* Orange Warning */
+  color: #bada55b3;
   font-weight: bold;
+}
+
+.meta-green{
+  color:green;
+}
+.meta-blue{
+  color:lightblue;
+}
+.meta-red{
+  color:lightcoral;
 }
 
 /* Minimized state */
