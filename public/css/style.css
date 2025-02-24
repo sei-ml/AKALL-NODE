@@ -252,16 +252,18 @@ html, body {
   bottom: 0;
   left: 0;
   width: 50%;
-  height: 25%;
-  background: rgba(0, 0, 0, 0.65);
+  height: 23%;
+  background:rgba(0, 0, 0, 0.15);
+  
   color: #fff;
   z-index: 10000;
   font-family: monospace;
   display: none;
-  opacity: 0.5;
+  opacity: 0.8;
   overflow: hidden;
   font-size: 0.93em;
-  line-height: 1.3;
+  line-height: 1.2;
+  box-shadow: -2px 27px 142px #777;
 }
 
 .console-overlay .log-content {
@@ -301,28 +303,28 @@ a:hover{
 }
 
 .meta-highlight {
-  color: #49c5b6a6;
+  color: #fefefe;
   font-weight: bold;
 }
 
 .meta-success {
-  color: #8fd694c9;
+  color: #fefefe;
   font-weight: bold;
 }
 
 .meta-warning {
-  color: #bada55b3;
+  color: #fefefe;
   font-weight: bold;
 }
 
 .meta-green{
-  color:green;
+  color: #f4f4f4;
 }
 .meta-blue{
-  color:lightblue;
+  color:#eaeaea;
 }
 .meta-red{
-  color:lightcoral;
+  color:#fbfbfb;
 }
 
 /* Minimized state */
