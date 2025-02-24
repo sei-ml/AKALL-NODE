@@ -290,6 +290,16 @@ html, body {
   background-color: #888;
 }
 
+a{
+  color: #d7dda1;
+  text-decoration: none;
+}
+
+a:hover{
+  color: #eee;
+  text-decoration: underline;
+}
+
 .meta-highlight {
   color: #49c5b6a6;
   font-weight: bold;
