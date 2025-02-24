@@ -251,76 +251,31 @@ html, body {
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
+  width: 50%;
   height: 25%;
   background: rgba(0, 0, 0, 0.85);
   color: #fff;
   z-index: 10000;
-  padding: 10px;
+  padding: 5px;
   font-family: monospace;
   display: none;
-  opacity: 0.8;
+  opacity: 0.5;
   overflow: hidden;
-  font-size: 0.8em;
+  font-size: 0.77em;
   line-height: 1.2;
 }
 
-.console-overlay {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 60%;
-  height: 30%;
-  background: rgba(0, 0, 0, 0.95);
-  color: #fff;
-  z-index: 10000;
-  padding: 10px 0;
-  font-family: Arial, Helvetica, sans-serif;
-  display: none;
-  opacity: 0.9;
-  overflow: hidden;
-  font-size: 0.8em;
-  line-height: 1;
-  box-shadow: 0px -4px 10px #222;
+.console-overlay p {
+  margin: 0.2em 0;
+  white-space: normal;
+  word-break: break-all;
 }
 
-/* Color-coded highlights */
-.console-overlay .meta-highlight {
-  font-weight: bold;
-  color: #0ff; /* Cyan */
-}
-.console-overlay .meta-warning {
-  font-weight: bold;
-  color: #ff9800; /* Orange */
-}
-.console-overlay .meta-success {
-  font-weight: bold;
-  color: #4caf50; /* Green */
-}
-.console-overlay .meta-error {
-  font-weight: bold;
-  color: #f44336; /* Red */
-}
-
-.console-overlay .log-content {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.console-overlay .log-content span {
-  display: inline-block;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 2px 10px;
-  font-size: 0.9em;
-}
-
-/* Close button */
 .console-overlay .close-button {
   position: absolute;
-  top: 5px;
+  top: 10px;
   right: 10px;
-  background: #222;
+  background: #333;
   color: #fff;
   border: none;
   font-size: 1em;
@@ -328,18 +283,17 @@ html, body {
   cursor: pointer;
 }
 
-.console-overlay .close-button:hover {
-  background-color: #444;
+.close-button:hover{
+  background-color: #888;
 }
 
-/* Minimized state */
 .console-overlay.minimized {
-  height: 30px;
-  width: 60%;
+  height: 30px; 
+  width: 50%; 
   overflow: hidden;
   opacity: 0.7;
   padding: 5px;
-  transition: height 0.1s ease, opacity 0.3s ease;
+  transition: height 0.1s ease, width 0.1s ease, opacity 0.3s ease;
 }
 
 .console-overlay.minimized .log-content {
@@ -347,9 +301,8 @@ html, body {
 }
 
 .console-overlay .log-content {
-  padding: 20px;
+  padding: 30px 20px;
 }
-
 
 #topbar {
   position: fixed;
