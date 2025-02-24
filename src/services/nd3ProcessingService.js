@@ -37,15 +37,15 @@ function parseAkallCommand(jpegFilename, depthFilename) {
     // Extract compression and color resolution from JPEG filename
     const jpegMatch = jpegFilename.match(/C(\d+)(MJPG|YUY2|NV12)(\d+)P\.jpeg$/);
     if (jpegMatch) {
-        akallParams.fps = jpegMatch[1];  // FPS (hardcoded, but keeping logic)
-        akallParams.compression = jpegMatch[2]; // Compression type
-        akallParams.colorResolution = jpegMatch[3]; // Color resolution height
+        akallParams.fps = jpegMatch[1];  
+        akallParams.compression = jpegMatch[2]; 
+        akallParams.colorResolution = jpegMatch[3]; 
     }
 
     // Extract depth mode from depth PNG filename
     const depthMatch = depthFilename.match(/D(\d+)(\d+)(WFOV_UNBINNED|NFOV_UNBINNED|WFOV_2x2BINNED|NFOV_2x2BINNED|PASSIVE_IR)\.png$/);
     if (depthMatch) {
-        const depthModeKey = depthMatch[3]; // Depth mode key
+        const depthModeKey = depthMatch[3]; 
 
         if (AKALL_DEPTH_MODES[depthModeKey]) {
             const depthInfo = AKALL_DEPTH_MODES[depthModeKey];
@@ -54,11 +54,10 @@ function parseAkallCommand(jpegFilename, depthFilename) {
             akallParams.foi = depthInfo.foi;
             akallParams.range = depthInfo.range;
             akallParams.exposure = depthInfo.exposure;
-            akallParams.depthModeId = depthInfo.id; // Store the depth mode ID
+            akallParams.depthModeId = depthInfo.id; 
         }
     }
 
-    // Construct AKALL Command with depthModeId as the last digit
     if (akallParams.compression && akallParams.colorResolution && akallParams.depthModeId) {
         akallParams.akallCommand = `K${akallParams.fps}${akallParams.compression}${akallParams.colorResolution}${akallParams.depthModeId}`;
     } else {
@@ -80,21 +79,18 @@ async function processNd3File(filePath, io) {
 
     fs.mkdirSync(outputDir, { recursive: true });
 
-    // Decompress the tar.gz into the output directory.
     await decompressTarGz(filePath, outputDir);
     console.log(`Decompressed to: ${outputDir}`);
     if (io) {
         io.emit('decompressionComplete', { filePath, outputDir });
     }
 
-    // Run all the shell commands (processing images, raw conversions, ND3 reconstruction)
     await shellCommandService.runCommands(outputDir);
     console.log('Shell commands completed');
     if (io) {
         io.emit('shellCommandsDone', { filePath });
     }
 
-    // --- Gather Processed Files ---
     let processedFiles;
     try {
         processedFiles = fs.readdirSync(outputDir);
@@ -103,18 +99,11 @@ async function processNd3File(filePath, io) {
         return;
     }
 
-    // Identify the original JPEG (color image)
-    const originalJPEG = processedFiles.find(file =>
-        file.toLowerCase().endsWith('.jpeg') &&
-        !file.startsWith('B_') &&
-        !file.startsWith('G_') &&
-        !file.startsWith('R_')
-    );
+    const originalJPEG = processedFiles.find(file => file.toLowerCase().endsWith('.jpeg') && !file.startsWith('B_') && !file.startsWith('G_') && !file.startsWith('R_'));
 
-    // Identify depth image (PNG format)
     const depthImage = processedFiles.find(file => file.toLowerCase().endsWith('.png') && file.includes('D'));
+    const nirImage = processedFiles.find(file => file.toLowerCase().endsWith('.png') && file.includes('IR'));
 
-    // Gather ND3 reconstruction outputs
     const plyFiles = processedFiles.filter(file => file.toLowerCase().endsWith('.ply'));
 
     const nd3Reconstruction = plyFiles.map(plyFile => {
@@ -124,10 +113,8 @@ async function processNd3File(filePath, io) {
         };
     });
 
-    // Gather raw image conversion outputs (PNG files)
     const rawConverted = processedFiles.filter(file => file.toLowerCase().endsWith('.png'));
 
-    // Extract timestamp from filename
     let timestamp = null;
     if (originalJPEG) {
         const match = originalJPEG.match(/^(\d+)/);
@@ -138,10 +125,8 @@ async function processNd3File(filePath, io) {
 
     const humanReadableTimestamp = timestamp ? new Date(parseInt(timestamp) * 1000).toISOString() : null;
 
-    // Extract AKALL command details
     const akallParams = originalJPEG && depthImage ? parseAkallCommand(originalJPEG, depthImage) : {};
 
-    // --- Build the Meta Data Object ---
     const meta = {
         originalFileName: baseName,
         processedPath: outputDir,
@@ -154,11 +139,17 @@ async function processNd3File(filePath, io) {
         outputs: {
             originalJPEG: originalJPEG || null,
             nd3Reconstruction: nd3Reconstruction,
-            rawConverted: rawConverted
+            rawConverted: rawConverted,
+            channels: {
+                blue: nd3Reconstruction[1]?.colorImage || null,
+                green: nd3Reconstruction[2]?.colorImage || null,
+                red: nd3Reconstruction[3]?.colorImage || null
+            },
+            depth: depthImage || null,
+            nir: nirImage || null
         }
     };
 
-    // Write meta.json
     const metaFilePath = path.join(outputDir, 'meta.json');
     try {
         fs.writeFileSync(metaFilePath, JSON.stringify(meta, null, 2));
@@ -167,7 +158,6 @@ async function processNd3File(filePath, io) {
         console.error('Error writing meta.json:', err);
     }
 
-    // Save to MongoDB
     const nd3Doc = new Nd3({
         originalFileName: baseName,
         status: 'processed',
