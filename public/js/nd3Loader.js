@@ -53,7 +53,7 @@ export async function loadND3File(createMergedPLYViewerFn) {
     metaContent.innerHTML = `
     <span class="meta-highlight">DATE</span> ${meta.timestamp?.humanReadable || 'N/A'} <span class="meta-highlight">UNIX </span> ${meta.timestamp?.unix || 'N/A'} </br>
     <span class="meta-success">COLOR IMAGE</span> ${outputs.originalJPEG || 'N/A'} </br>
-    <span class="meta-highlight">B CH</span> ${blueImage} <span class="meta-highlight">G CH</span> ${greenImage} <span class="meta-highlight">R CH</span> ${redImage} </br>
+    <span class="meta-highlight" sytle="color:lightblue;">B CH</span> ${blueImage} <span class="meta-highlight" sytle="color:green;">G CH</span> ${greenImage} <span class="meta-highlight" sytle="color:red;">R CH</span> ${redImage} </br>
     <span class="meta-warning">DEPTH</span> ${depthImage} <span class="meta-warning">NIR</span> ${nirImage} </br>
     <span class="meta-highlight">RAW</span> ${rawConverted.length > 0 ? rawConverted.join(', ') : 'N/A'} </br>
     <span class="meta-success">AKALL CMD</span> ${meta.akallCommand || 'N/A'} <span class="meta-highlight">FPS</span> ${akallDetails.fps || 'N/A'} <span class="meta-highlight">COMP</span> ${akallDetails.compression || 'N/A'} 
