@@ -1,10 +1,3 @@
-/**
- * src/services/fileWatcherService.js
- *
- * Uses Node’s built-in fs.watch to watch a directory for .tar.gz files
- * and then queues them for processing.
- */
-
 const fs = require('fs');
 const path = require('path');
 const queueService = require('./queueService');
@@ -27,14 +20,32 @@ function startWatcher(io) {
         if (err) {
           return;
         }
-        
+
         if (stats.isFile() && filePath.endsWith('.tar.gz')) {
-          console.log('New file detected:', filePath);
-          queueService.addToQueue(async () => {
-            await processNd3File(filePath, io);
-          });
-        } else {
-          console.log(`Detected file ${filePath}, but it doesn't match .tar.gz pattern.`);
+          console.log(`New file detected: ${filePath}, waiting for stability...`);
+
+          // Check file size every second until it stops changing
+          let lastSize = 0;
+          const checkInterval = setInterval(() => {
+            fs.stat(filePath, (err, newStats) => {
+              if (err) {
+                clearInterval(checkInterval);
+                console.error(`Error checking file: ${filePath}`, err);
+                return;
+              }
+
+              if (newStats.size === lastSize) {
+                clearInterval(checkInterval);
+                console.log(`File ${filePath} is now stable. Adding to queue...`);
+
+                queueService.addToQueue(async () => {
+                  await processNd3File(filePath, io);
+                });
+              } else {
+                lastSize = newStats.size;
+              }
+            });
+          }, 1000); // Check every 1 second
         }
       });
     }
