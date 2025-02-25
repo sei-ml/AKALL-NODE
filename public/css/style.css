@@ -5,6 +5,7 @@ html, body {
   font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #000, #111);
   overflow: hidden;
+  font-family: monospace;
 }
 
 .grid-container {
@@ -322,7 +323,7 @@ a:hover{
 }
 
 .meta-date{
-  font-size: 1.2em;
+  font-size: 0.93em;
 }
 
 .meta-green{
