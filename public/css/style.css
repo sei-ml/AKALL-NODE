@@ -76,18 +76,22 @@ html, body {
 
 .extra-label {
   position: absolute;
-  bottom: 5px;
+  top: 5px;
   left: 5px;
-  background: rgb(22 26 22 / 60%);
-  color: #FFFF;
+  background: rgb(255 255 255 / 20%);
+  color: #fff;
   font-size: 12px;
   border-radius: 0;
   z-index: 10;
   white-space: pre-line;
-  margin-bottom: -5px;
-  margin-left: -5px;
-  padding: 12px;
-  opacity: 0.2;
+  margin-bottom: 0;
+  margin-left: 0;
+  padding: 0;
+  opacity: 0.7;
+  text-transform: UPPERCASE;
+  line-height: 0.9;
+  padding: 2px 20px;
+  margin-top: -22px;
 }
 
 .extra-label ul{
@@ -252,9 +256,9 @@ html, body {
   bottom: 0;
   left: 0;
   width: 50%;
-  height: 23%;
+  height: 25%;
   background:rgba(0, 0, 0, 0.15);
-  
+  text-transform: uppercase;  
   color: #fff;
   z-index: 10000;
   font-family: monospace;
@@ -263,7 +267,7 @@ html, body {
   overflow: hidden;
   font-size: 0.93em;
   line-height: 1.2;
-  box-shadow: -2px 27px 142px #777;
+  box-shadow: -2px 7px 156px #777;
 }
 
 .console-overlay .log-content {
@@ -317,6 +321,10 @@ a:hover{
   font-weight: bold;
 }
 
+.meta-date{
+  font-size: 1.2em;
+}
+
 .meta-green{
   color: #f4f4f4;
 }
@@ -329,7 +337,7 @@ a:hover{
 
 /* Minimized state */
 .console-overlay.minimized {
-  height: 30px;
+  height: 36px;
   width: 50%;
   overflow: hidden;
   opacity: 0.7;
