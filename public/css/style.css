@@ -128,7 +128,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0px -2px 18px 0px #111, 5px -3px 4px -1px #000;
+  box-shadow: 41px 56px 224px #222;
 }
 .scene-item img {
   width: 100%;
@@ -231,6 +231,20 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+#upperbar{
+    position: fixed;
+    top: 64px;
+    right: 10px;
+    background: #111;
+    padding: 7px 3px;
+    border-radius: 0px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .grid-A {
