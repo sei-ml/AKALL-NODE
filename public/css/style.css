@@ -485,9 +485,31 @@ body.view3 .ply-viewer {
   .scene-section {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .left-col {
+    display: grid;
+    grid-template-rows: 0fr 1fr;
+    gap: 100px;
+    position: fixed;
+    width: 30%;
+    z-index: 99999;
+  }
+  .right-col{
+    position: fixed;
+  }
+  .console-overlay {
+    width: 100%;
+  }
 }
 @media (max-width: 480px) {
   .scene-section {
     grid-template-columns: 1fr;
+  }
+  .left-col {
+    display: grid;
+    grid-template-rows: 0fr 1fr;
+    gap: 100px;
+    position: fixed;
+    width: 30%;
   }
 }
