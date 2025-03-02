@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sci-Fi Styled Line Graph</title>
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include Luxon and Chart.js Luxon adapter -->
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
+    <!-- Include Abel font -->
+    <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Abel', sans-serif;
+            background: transparent;
+            color: black;
+        }
+
+        #container {
+            max-width: 800px;
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        #variableSelector {
+            padding: 10px;
+            border: 1px solid #56FEB7;
+            background: rgba(0, 255, 234, 0.1);
+            border-radius: 20px;
+            color: #56FEB7;
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-family: 'Abel', sans-serif;
+        }
+
+        canvas {
+            background-color: transparent;
+            border-radius: 20px;
+            box-shadow: 0px 0px 20px #56FEB7;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <select id="variableSelector"></select>
+        <canvas id="lineChart" width="800" height="400"></canvas>
+    </div>
+
+    <script>
+        const unitMap = {
+            "pcb_temp_c": "°C",
+            "battery_temp_c": "°C",
+            "battery_raw": "mV",
+            "fram_bytes": "bytes",
+            "calipile_object": "°C",
+            "calipile_ambient": "°C",
+            "orientation": "°",
+            "coord_x": "px",
+            "coord_y": "px",
+            "rssi": "dBm",
+            "power_on_time": "s",
+            "gyro.x": "rad/s",
+            "gyro.y": "rad/s",
+            "gyro.z": "rad/s",
+            "accelerometer.x": "m/s²",
+            "accelerometer.y": "m/s²",
+            "accelerometer.z": "m/s²"
+        };
+
+        async function loadData() {
+            const response = await fetch('data.json');
+            const data = await response.json();
+            return data;
+        }
+
+        let chart, jsonData;
+
+        function updateChart(selectedVariable) {
+            const timestamps = jsonData.map(entry => new Date(entry.timestamp));
+            let values = jsonData.map(entry => {
+                if (selectedVariable.includes(".")) {
+                    const keys = selectedVariable.split(".");
+                    return entry[keys[0]][keys[1]];
+                }
+                return entry[selectedVariable];
+            });
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            const unit = unitMap[selectedVariable] || "";
+
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timestamps,
+                    datasets: [{
+                        label: `${selectedVariable} (${unit})`,
+                        data: values,
+                        borderColor: '#56FEB7',
+                        backgroundColor: 'rgba(86, 254, 183, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: '#56FEB7',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                tooltipFormat: 'HH:mm',
+                                displayFormats: {
+                                    minute: 'HH:mm'
+                                }
+                            },
+                            ticks: {
+                                color: '#56FEB7',
+                                font: {
+                                    family: 'Abel',
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#56FEB7',
+                                font: {
+                                    family: 'Abel',
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#56FEB7',
+                            bodyColor: '#ffffff',
+                            borderColor: '#56FEB7',
+                            borderWidth: 1
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function populateDropdown(variables) {
+            const selector = document.getElementById('variableSelector');
+            variables.forEach(variable => {
+                const option = document.createElement('option');
+                option.value = variable;
+                option.textContent = `${variable} (${unitMap[variable] || ''})`;
+                selector.appendChild(option);
+            });
+
+            selector.addEventListener('change', (event) => {
+                updateChart(event.target.value);
+            });
+        }
+
+        async function init() {
+            jsonData = await loadData();
+            let variables = Object.keys(jsonData[0])
+                .filter(key => key !== 'timestamp' && typeof jsonData[0][key] !== 'object');
+
+            // Add nested variables manually
+            const nestedVars = ['gyro.x', 'gyro.y', 'gyro.z', 'accelerometer.x', 'accelerometer.y', 'accelerometer.z'];
+            variables = variables.concat(nestedVars);
+
+            populateDropdown(variables);
+            updateChart(variables[0]);
+        }
+
+        init();
+    </script>
+</body>
+</html>

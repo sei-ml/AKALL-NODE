@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lunar vs. Earth Gravity Demo</title>
+  <style>
+    /* Basic page setup */
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      color: #66ffcc;
+      text-align: center;
+    }
+    /* Responsive container */
+    .container {
+      position: relative;
+      width: 40vw;
+      height: 40vw;
+      max-width: 400px;
+      max-height: 400px;
+      border: 2px solid transparent;
+      box-sizing: border-box;
+    }
+    .ground {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 5px;
+      background-color: #66ffcc;
+      z-index: 2;
+    }
+    /* Ball style */
+    .ball {
+      position: absolute;
+      bottom: 10px;
+      width: 15%;
+      height: 15%;
+      background-color: white;
+      border-radius: 50%;
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+    /* Label styling */
+    .gravity-label {
+      position: absolute;
+      bottom: 10px;
+      width: 25%;
+      text-align: center;
+      font-size: 1.2vw;
+      font-weight: bold;
+      background: rgba(0, 0, 0, 0.7);
+      color: #66ffcc;
+      padding: 5px;
+      border-radius: 10px;
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- MOON Ball -->
+    <div class="ball" id="moonBall" style="left: 20%;" data-img="ball.png"></div>
+    <div class="gravity-label" style="left: 15%;">🌙 Moon (0.1g)</div>
+    
+    <!-- EARTH Ball -->
+    <div class="ball" id="earthBall" style="left: 60%;" data-img="ball.png"></div>
+    <div class="gravity-label" style="left: 55%;">🌍 Earth (0.3g)</div>
+    
+    <div class="ground"></div>
+  </div>
+
+  <script>
+    function bounce(ball, gravity, maxHeight, floor, initialVelocity) {
+      let velocity = initialVelocity;
+      let position = floor;
+
+      function update() {
+        velocity -= gravity;
+        position += velocity;
+
+        if (position < floor) {
+          position = floor;
+          velocity = Math.abs(velocity); // No energy loss
+        } else if (position > maxHeight) {
+          position = maxHeight;
+          velocity = -Math.abs(velocity);
+        }
+
+        ball.style.bottom = position + 'px';
+        requestAnimationFrame(update);
+      }
+      update();
+    }
+
+    document.querySelectorAll('.ball').forEach((ball) => {
+      const imgPath = ball.getAttribute('data-img');
+      if (imgPath) {
+        ball.style.backgroundImage = `url(${imgPath})`;
+        ball.style.backgroundColor = 'transparent';
+        ball.style.borderRadius = '0';
+      }
+    });
+
+    bounce(document.getElementById('moonBall'), 0.1, 150, 10, 3);
+    bounce(document.getElementById('earthBall'), 0.3, 150, 10, 6);
+  </script>
+</body>
+</html>

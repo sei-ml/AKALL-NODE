@@ -1,0 +1,210 @@
+[
+  {
+    "timestamp": "2024-10-25T00:00:00Z",
+    "pcb_temp_c": 27.6,
+    "battery_temp_c": 31.3,
+    "battery_raw": 35,
+    "fram_bytes": 2048,
+    "gyro": {
+      "x": -0.07,
+      "y": 0.09,
+      "z": -0.05
+    },
+    "accelerometer": {
+      "x": 0.19,
+      "y": 0.09,
+      "z": 9.64
+    },
+    "calipile_object": 31.2,
+    "calipile_ambient": 25.8,
+    "orientation": 262.4,
+    "coord_x": 1153,
+    "coord_y": 198,
+    "heater_on": false,
+    "rssi": 84,
+    "power_on_time": 0,
+    "_r0": [0, 0]
+  },
+  {
+    "timestamp": "2024-10-25T00:02:00Z",
+    "pcb_temp_c": 22.9,
+    "battery_temp_c": 33.7,
+    "battery_raw": 60,
+    "fram_bytes": 2048,
+    "gyro": {
+      "x": -0.08,
+      "y": -0.05,
+      "z": -0.06
+    },
+    "accelerometer": {
+      "x": 0.11,
+      "y": 0.1,
+      "z": 9.53
+    },
+    "calipile_object": 34.4,
+    "calipile_ambient": 26.7,
+    "orientation": 111.9,
+    "coord_x": 1458,
+    "coord_y": 373,
+    "heater_on": false,
+    "rssi": 94,
+    "power_on_time": 0,
+    "_r0": [0, 0]
+  },
+  {
+    "timestamp": "2024-10-25T00:04:00Z",
+    "pcb_temp_c": 24.5,
+    "battery_temp_c": 29.2,
+    "battery_raw": 87,
+    "fram_bytes": 2048,
+    "gyro": {
+      "x": -0.03,
+      "y": -0.02,
+      "z": -0.08
+    },
+    "accelerometer": {
+      "x": 0.04,
+      "y": 0.04,
+      "z": 9.68
+    },
+    "calipile_object": 39.4,
+    "calipile_ambient": 26.2,
+    "orientation": 109.1,
+    "coord_x": 907,
+    "coord_y": 480,
+    "heater_on": true,
+    "rssi": 82,
+    "power_on_time": 0,
+    "_r0": [0, 0]
+  },
+  {
+    "timestamp": "2024-10-25T00:06:00Z",
+    "pcb_temp_c": 28.4,
+    "battery_temp_c": 27.6,
+    "battery_raw": 96,
+    "fram_bytes": 2048,
+    "gyro": {
+      "x": 0.06,
+      "y": -0.04,
+      "z": 0.09
+    },
+    "accelerometer": {
+      "x": 0.08,
+      "y": 0.11,
+      "z": 9.55
+    },
+    "calipile_object": 36.9,
+    "calipile_ambient": 28.5,
+    "orientation": 113.9,
+    "coord_x": 1173,
+    "coord_y": -287,
+    "heater_on": true,
+    "rssi": 84,
+    "power_on_time": 0,
+    "_r0": [0, 0]
+  },
+  {
+    "timestamp": "2024-10-25T00:08:00Z",
+    "pcb_temp_c": 22.9,
+    "battery_temp_c": 28.6,
+    "battery_raw": 33,
+    "fram_bytes": 2048,
+    "gyro": {
+      "x": -0.02,
+      "y": 0.09,
+      "z": -0.04
+    },
+    "accelerometer": {
+      "x": 0.04,
+      "y": 0.1,
+      "z": 9.92
+    },
+    "calipile_object": 31.0,
+    "calipile_ambient": 26.5,
+    "orientation": 298.2,
+    "coord_x": 1093,
+    "coord_y": 171,
+    "heater_on": true,
+    "rssi": 93,
+    "power_on_time": 0,
+    "_r0": [1, 1]
+  },
+  {
+    "timestamp": "2024-10-25T00:10:00Z",
+    "pcb_temp_c": 28.5,
+    "battery_temp_c": 27.3,
+    "battery_raw": 93,
+    "fram_bytes": 2048,
+    "gyro": {
+      "x": -0.05,
+      "y": -0.08,
+      "z": -0.06
+    },
+    "accelerometer": {
+      "x": -0.03,
+      "y": -0.2,
+      "z": 9.83
+    },
+    "calipile_object": 32.2,
+    "calipile_ambient": 26.3,
+    "orientation": 39.3,
+    "coord_x": 1053,
+    "coord_y": 435,
+    "heater_on": true,
+    "rssi": 58,
+    "power_on_time": 0,
+    "_r0": [1, 1]
+  },
+  {
+    "timestamp": "2024-10-25T00:12:00Z",
+    "pcb_temp_c": 29.6,
+    "battery_temp_c": 35.0,
+    "battery_raw": 60,
+    "fram_bytes": 2048,
+    "gyro": {
+      "x": -0.09,
+      "y": 0.1,
+      "z": 0.08
+    },
+    "accelerometer": {
+      "x": -0.03,
+      "y": -0.1,
+      "z": 9.89
+    },
+    "calipile_object": 36.2,
+    "calipile_ambient": 25.6,
+    "orientation": 85.3,
+    "coord_x": 1892,
+    "coord_y": 274,
+    "heater_on": false,
+    "rssi": 98,
+    "power_on_time": 0,
+    "_r0": [0, 0]
+  },
+  {
+    "timestamp": "2024-10-25T00:14:00Z",
+    "pcb_temp_c": 28.4,
+    "battery_temp_c": 31.7,
+    "battery_raw": 96,
+    "fram_bytes": 2048,
+    "gyro": {
+      "x": 0.1,
+      "y": -0.08,
+      "z": 0.01
+    },
+    "accelerometer": {
+      "x": -0.03,
+      "y": -0.14,
+      "z": 9.69
+    },
+    "calipile_object": 37.5,
+    "calipile_ambient": 28.4,
+    "orientation": 57.8,
+    "coord_x": 1206,
+    "coord_y": -446,
+    "heater_on": true,
+    "rssi": 91,
+    "power_on_time": 0,
+    "_r0": [0, 0]
+  }
+]

@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Team Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Load the Abel font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+    <!-- Load Font Awesome for the icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+         /* Reset margins/padding, transparent background, and hide overflow on html/body */
+         html, body {
+             margin: 0;
+             padding: 0;
+             background-color: transparent;
+             font-family: 'Abel', sans-serif;
+             color: #56FEB7FF;
+             overflow: hidden; /* We'll handle scrolling in our wrapper */
+         }
+         /* Scroll wrapper with fixed viewport height and vertical scrollbar only */
+         #scrollWrapper {
+             height: 100vh;
+             overflow-y: scroll; /* Vertical scrolling */
+             overflow-x: hidden; /* Disable horizontal scrolling */
+             margin: 0;
+         }
+         /* Fixed design container – your “ideal” layout dimensions
+        Added extra right padding (3rem) so that content is not flush with the scrollbar */
+         .scale-container {
+             width: 1200px; /* Fixed design width */
+             height: 1500px; /* Fixed design height */
+             transform-origin: top left;
+             box-sizing: border-box;
+             padding: 1.5rem 3rem 1.5rem 1.5rem; /* Top, Right, Bottom, Left */
+             margin: 0; /* Flush with the left edge */
+         }
+         /* Semantic header */
+         header {
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             margin-bottom: 1.25rem;
+             font-size: 2.25rem;
+         }
+
+             header i {
+                 margin-right: 0.625rem;
+                 font-size: 2.5rem;
+             }
+         /* Main container for team members using a responsive grid */
+         main {
+             display: grid;
+             grid-template-columns: repeat(3, 1fr);
+             gap: 1.25rem;
+         }
+         /* Each team member card */
+         article.team-member {
+             text-align: center;
+             padding: 0.625rem;
+             border: 0.125rem solid #444;
+             border-radius: 0.3125rem;
+             /* Lunar-themed dark gradient background */
+             background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+             transition: transform 0.3s ease, box-shadow 0.3s ease;
+         }
+             /* Hover effect for interactivity */
+             article.team-member:hover {
+                 transform: scale(1.02);
+                 box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+             }
+             /* Uniform image styling: fixed size (300x300px) with cropping */
+             article.team-member img {
+                 width: 300px;
+                 height: 300px;
+                 object-fit: cover;
+                 border: 0.125rem solid #444;
+                 border-radius: 0.3125rem;
+             }
+
+         .info {
+             margin-top: 0.625rem;
+         }
+
+             .info h3 {
+                 margin: 0.3125rem 0;
+                 font-size: 1.5rem;
+             }
+
+                 .info h3 small {
+                     display: block;
+                     font-size: 1rem;
+                     color: inherit;
+                 }
+
+             .info p {
+                 margin: 0.3125rem 0;
+                 font-size: 1.125rem;
+             }
+    </style>
+</head>
+<body>
+    <!-- Scroll wrapper that provides a single vertical scrollbar -->
+    <div id="scrollWrapper">
+        <!-- The scale-container uses fixed design dimensions and will be scaled horizontally -->
+        <div id="scaleContainer" class="scale-container">
+            <header>
+                <i class="fas fa-users" aria-hidden="true"></i>
+                <span>Team</span>
+            </header>
+            <main>
+                <!-- Team Member 1: Leonie Bensch -->
+                <article class="team-member">
+                    <img src="TeamPictures/LeonieImage.jpg" alt="Leonie Bensch">
+                    <div class="info">
+                        <h3>Leonie Bensch<br><small>Lead Dashboard UI/UX &amp; AI Integration Engineer</small></h3>
+                        <p>Leonie leads the design and development of the Unreal Engine-based Mission Control Dashboard, integrating real-time rover and payload data, an AI assistant, and an intuitive interface for public mission awareness and engagement. She is part of the MIT Space Exploration Initiative.</p>
+                    </div>
+                </article>
+                <!-- Team Member 2: Cody Paige -->
+                <article class="team-member">
+                    <img src="TeamPictures/Cody.jpg" alt="Cody Paige">
+                    <div class="info">
+                        <h3>Cody Paige<br><small>SEI Director and Camera Project Lead</small></h3>
+                        <p>Dr. Cody Paige is the Director of the Space Exploration Initiative at the Media Lab, a team of 50+ students, faculty and staff building and flying advanced technology for space exploration. She recently completed her Ph.D. in Aeronautics and Astronautics at MIT.</p>
+                    </div>
+                </article>
+                <!-- Team Member 3: Don D. Haddad -->
+                <article class="team-member">
+                    <img src="TeamPictures/Don.jpg" alt="Don D. Haddad">
+                    <div class="info">
+                        <h3>Don D. Haddad<br><small>Camera Lead Software Engineer</small></h3>
+                        <p>Dr. Don D. Haddad is a Planetary Science Software Engineer working with NASA Ames Research Center and Space Exploration Initiate at MIT. He is currently serving as the Lead Software Engineer on the Camera payload.</p>
+                    </div>
+                </article>
+                <!-- Team Member 4: Fangzheng Liu -->
+                <article class="team-member">
+                    <img src="TeamPictures/Fangzheng.jpg" alt="Fangzheng Liu">
+                    <div class="info">
+                        <h3>Fangzheng Liu<br><small>AstroAnt Project Lead</small></h3>
+                        <p>Fangzheng Liu is a second-year PhD student at the MIT Media Lab, studying in the Responsive Environments group, advised by Prof. Joseph A. Paradiso and Dr. Ariel Ekblaw.</p>
+                    </div>
+                </article>
+                <!-- Team Member 5: Nathan Perry -->
+                <article class="team-member">
+                    <img src="TeamPictures/Nathan.png" alt="Nathan Perry">
+                    <div class="info">
+                        <h3>Nathan Perry<br><small>AstroAnt Software Engineer</small></h3>
+                        <p>Nathan is a multidisciplinary software engineer with several years of experience in industry, most recently an alum of Tulip Interfaces.</p>
+                    </div>
+                </article>
+                <!-- Team Member 6: Sean Auffinger -->
+                <article class="team-member">
+                    <img src="TeamPictures/sean.jpg" alt="Sean Auffinger">
+                    <div class="info">
+                        <h3>Sean Auffinger<br><small>Mission Integrator</small></h3>
+                        <p>Sean is the Mission Integrator for the MIT Space Exploration Initiative, acting as liaison between the project teams and the flight provider.</p>
+                    </div>
+                </article>
+                <!-- Team Member 7: Joseph Paradiso -->
+                <article class="team-member">
+                    <img src="TeamPictures/Joe.jpg" alt="Joseph Paradiso">
+                    <div class="info">
+                        <h3>Joseph Paradiso<br><small>AstroAnt Advisor</small></h3>
+                        <p>Joseph Paradiso directs the MIT Media Lab’s Responsive Environments group, which explores how sensor networks augment and mediate human experience, interaction, and perception.</p>
+                    </div>
+                </article>
+                <!-- Team Member 8: Ariel Ekblaw -->
+                <article class="team-member">
+                    <img src="TeamPictures/ariel_ekblaw_14_b.s._headshot.jpg" alt="Ariel Ekblaw">
+                    <div class="info">
+                        <h3>Ariel Ekblaw<br><small>Principal Investigator</small></h3>
+                        <p>Dr. Ariel Ekblaw founded the MIT Space Exploration Initiative, a team of 50+ students, faculty and staff building and flying advanced technology for space exploration. Ariel leads the MIT “To the Moon to Stay Mission” and developed MIT’s “Operating in the Lunar Environment Course” that incubated and advised this first cohort of lunar surface payloads.</p>
+                    </div>
+                </article>
+                <!-- Team Member 9: Dava Newman -->
+                <article class="team-member">
+                    <img src="TeamPictures/Dava.jpg" alt="Dava Newman">
+                    <div class="info">
+                        <h3>Dava Newman<br><small>Director, MIT Media Lab</small></h3>
+                        <p>Dava Newman is the director of the MIT Media Lab. She holds the Apollo Program Professor of Astronautics chair at the Massachusetts Institute of Technology (MIT) and is a Harvard–MIT Health, Sciences, and Technology faculty member in Cambridge, Massachusetts.</p>
+                    </div>
+                </article>
+            </main>
+        </div>
+    </div>
+
+    <!-- JavaScript to scale the design horizontally based on viewport width -->
+    <script>
+        function resizeContent() {
+            var container = document.getElementById('scaleContainer');
+            var designWidth = 1200; // Fixed design width
+            var scale = window.innerWidth / designWidth;
+            container.style.transform = 'scale(' + scale + ')';
+        }
+        window.addEventListener('resize', resizeContent);
+        window.addEventListener('load', resizeContent);
+    </script>
+</body>
+</html>
