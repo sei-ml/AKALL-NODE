@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", async function() {
 
             const imagePath = outputs.originalJPEG ? `${relativePath}${outputs.originalJPEG}` : "placeholder.jpg";
             const plyFile = outputs.nd3Reconstruction.length > 0 ? `${relativePath}${outputs.nd3Reconstruction[0].ply}` : "#";
-            
+            const nd3Link = `/?nd3=${meta.processedPath.split("/")[6]}`;
+
             const card = document.createElement("div");
             card.classList.add("card");
 
@@ -28,8 +29,13 @@ document.addEventListener("DOMContentLoaded", async function() {
                 img.style.opacity = "1"; 
             };
 
+            const imgLink = document.createElement("a");
+            imgLink.href = nd3Link;
+            imgLink.target = "_blank";
+            imgLink.appendChild(img);
+
             card.innerHTML = `
-                <a href="/?nd3=${meta.processedPath.split("/")[6]}" target="_blank">
+                <a href="${nd3Link}" target="_blank">
                   <div class="inner">
                     <p><strong>${meta.originalFileName}</strong></p>
                     <p>DATE: ${timestamp.humanReadable}</p>
@@ -38,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 </a>
             `;
 
-            card.prepend(img); 
+            card.prepend(imgLink); 
             container.appendChild(card);
         });
 
