@@ -23,8 +23,8 @@ document.addEventListener("DOMContentLoaded", async function() {
                 <img src="${imagePath}" alt="Thumbnail">
                 <div class="inner">
                 <p><strong>${meta.originalFileName}</strong></p>
-                <p>D: ${timestamp.humanReadable}</p>
-                <p>C: ${meta.akallCommand}</p></a>
+                <p>DATE: ${timestamp.humanReadable}</p>
+                <p>AKALL: ${meta.akallCommand}</p></a>
                 </div>
             `;
 
