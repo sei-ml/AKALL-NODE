@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 <div class="inner">
                 <p><strong>${meta.originalFileName}</strong></p>
                 <p>D: ${timestamp.humanReadable}</p>
-                <p>C: ${meta.akallCommand}P</p></a>
+                <p>C: ${meta.akallCommand}</p></a>
                 </div>
             `;
 
