@@ -505,7 +505,6 @@ body.view3 .ply-viewer {
 .card {
   background: #1e1e1e;
   border-radius: 0;
-  padding: 10px;
   text-align: right;
   box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
   opacity: 0.6;
