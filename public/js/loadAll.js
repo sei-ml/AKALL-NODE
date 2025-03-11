@@ -18,16 +18,28 @@ document.addEventListener("DOMContentLoaded", async function() {
             
             const card = document.createElement("div");
             card.classList.add("card");
+
+            // Create image element and load separately
+            const img = document.createElement("img");
+            img.src = imagePath;
+            img.alt = "Thumbnail";
+            img.style.opacity = "0"; // Hide image initially
+            
+            img.onload = () => {
+                img.style.opacity = "1"; // Fade in image after load
+            };
+
             card.innerHTML = `
                 <a href="/?nd3=${meta.processedPath.split("/")[6]}" target="_blank">
-                <img src="${imagePath}" alt="Thumbnail">
-                <div class="inner">
-                <p><strong>${meta.originalFileName}</strong></p>
-                <p>DATE: ${timestamp.humanReadable}</p>
-                <p>AKALL: ${meta.akallCommand}</p></a>
-                </div>
+                  <div class="inner">
+                    <p><strong>${meta.originalFileName}</strong></p>
+                    <p>DATE: ${timestamp.humanReadable}</p>
+                    <p>AKALL: ${meta.akallCommand}</p>
+                  </div>
+                </a>
             `;
 
+            card.prepend(img); // Add image at the top of the card
             container.appendChild(card);
         });
 
