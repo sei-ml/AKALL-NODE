@@ -14,12 +14,12 @@ document.addEventListener("DOMContentLoaded", async function() {
             const relativePath = `/watch/processed/${basePath}/`;
 
             const imagePath = outputs.originalJPEG ? `${relativePath}${outputs.originalJPEG}` : "placeholder.jpg";
-            const plyFile = outputs.nd3Reconstruction.length > 0 ? `${relativePath}${outputs.nd3Reconstruction[0].ply}` : "#";
             const nd3Link = `/?nd3=${meta.processedPath.split("/")[6]}`;
 
             const card = document.createElement("div");
             card.classList.add("card");
 
+            // Create the image
             const img = document.createElement("img");
             img.src = imagePath;
             img.alt = "Thumbnail";
@@ -29,10 +29,11 @@ document.addEventListener("DOMContentLoaded", async function() {
                 img.style.opacity = "1"; 
             };
 
-            const imgLink = document.createElement("a");
-            imgLink.href = nd3Link;
-            imgLink.target = "_blank";
-            imgLink.appendChild(img);
+            // Make the image clickable
+            img.style.cursor = "pointer";
+            img.addEventListener("click", () => {
+                window.open(nd3Link, "_blank");
+            });
 
             card.innerHTML = `
                 <a href="${nd3Link}" target="_blank">
@@ -44,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 </a>
             `;
 
-            card.prepend(imgLink); 
+            card.prepend(img); 
             container.appendChild(card);
         });
 
