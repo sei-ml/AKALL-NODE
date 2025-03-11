@@ -19,14 +19,13 @@ document.addEventListener("DOMContentLoaded", async function() {
             const card = document.createElement("div");
             card.classList.add("card");
 
-            // Create image element and load separately
             const img = document.createElement("img");
             img.src = imagePath;
             img.alt = "Thumbnail";
-            img.style.opacity = "0"; // Hide image initially
+            img.style.opacity = "0"; 
             
             img.onload = () => {
-                img.style.opacity = "1"; // Fade in image after load
+                img.style.opacity = "1"; 
             };
 
             card.innerHTML = `
@@ -39,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 </a>
             `;
 
-            card.prepend(img); // Add image at the top of the card
+            card.prepend(img); 
             container.appendChild(card);
         });
 
