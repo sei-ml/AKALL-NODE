@@ -28,6 +28,10 @@ app.use('/watch', express.static(path.join(__dirname, '..', 'watch')));
 // Routes
 app.use('/api/nd3', nd3Routes);
 
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'all.html'));
+});
+
 // Create HTTP server & attach Socket.io
 const server = http.createServer(app);
 const io = initSockets(server);

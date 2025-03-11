@@ -77,7 +77,6 @@ export async function loadND3File(createMergedPLYViewerFn) {
       ? rawConverted.map(file => createLink(file)).join(', ')
       : 'N/A';
 
-    // ✅ **Restoring PLY Loader**
     if (nd3Reconstruction.length > 0) {
       createMergedPLYViewerFn("ply-viewer-merged", relativePath + nd3Reconstruction[0].ply);
     }

@@ -494,6 +494,48 @@ body.view3 .ply-viewer {
   display: none;
 }
 
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  padding: 10px;
+}
+
+.card {
+  background: #1e1e1e;
+  border-radius: 0;
+  padding: 10px;
+  text-align: right;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+  opacity: 0.6;
+}
+
+.card:hover{
+  opacity: 1;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  border-radius: 1px;
+}
+
+.card p {
+  font-size: 12px;
+  margin: 5px 0;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.card a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.card a:hover {
+  text-decoration: underline;
+}
+
 /* Responsive adjustments for scene section */
 @media (max-width: 768px) {
   .scene-section {
