@@ -14,6 +14,9 @@
   <meta charset="UTF-8">
   <title>ND3 Viewer Web-App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 
   <script type="importmap">
@@ -32,6 +35,9 @@
 <body>
   <div id="multiview" style="display: none;"></div>
   <div id="viewport">
+  <div class="menu-item info-trigger" id="info-trigger" title="Sample Info">i</div>
+  <div class="menu-divider"></div>
+  <a href="/dashboard" class="menu-item menu-link" title="Back to Dashboard">⌂</a>
   <div class="menu-item" data-view="view1">⿱</div>
   <div class="menu-item selected" data-view="view2">⿺</div>
   <div class="menu-item" data-view="view3">⿴</div>
@@ -73,6 +79,16 @@
   <button id="close-logview" class="close-button">-</button>
   <div class="log-content" id="meta-content">
     Loading meta data...
+  </div>
+</div>
+
+<!-- Info Panel Dropdown -->
+<div id="info-panel" class="info-panel">
+  <div class="info-header">
+    <span class="info-title" id="info-title">LUNAR SAMPLE</span>
+  </div>
+  <div class="info-body" id="info-body">
+    <div class="info-loading">Loading sample data...</div>
   </div>
 </div>
 
