@@ -1,21 +1,21 @@
 # AKALL-NODE
 
-AKALL-NODE is the application I/O server and browser archive for **AKALL (Azure Kinect à la Luna)**. AKALL is an RGB-D imaging project developed for planetary surface research. This repository supports reviewing lunar-analog captures made at the NASA Ames Lunar Lab, including image channels, depth and near-infrared data, and 3D point-cloud reconstructions.
+AKALL-NODE is the application I/O server and browser-based data archive for **AKALL (Azure Kinect à la Luna)**, an RGB-D imaging project developed for planetary surface research. The system supports analysis of lunar-analog observations acquired at the NASA Ames Lunar Lab. The capture products represented in this archive include visible image channels, depth and near-infrared imagery, metadata, and 3D point-cloud reconstructions.
 
-The current site combines a project overview, a capture archive, and an interactive viewer. A capture can be opened from the archive or directly with a URL such as `/?nd3=<capture-folder>`. The viewer presents the associated images and PLY model in several layouts.
+The web interface comprises a project overview, a capture archive, and an interactive visualization client. Capture records can be selected from the archive or addressed directly with a URL such as `/?nd3=<capture-folder>`. The visualization client presents the associated imagery and PLY point cloud in multiple views.
 
-## What the application does
+## System overview
 
-- Serves the AKALL project homepage and capture archive.
-- Reads capture metadata from MongoDB and exposes it through a small REST API.
-- Serves processed capture assets from `watch/processed/`.
-- Watches `incoming/` for `.tar.gz` capture bundles, queues them, unpacks and converts image data, and can invoke the ND3 reconstruction executable to create PLY point clouds.
-- Emits processing events through Socket.IO.
-- Renders PLY files and capture images in the browser.
+- Delivers the project homepage, capture archive, and interactive data viewer over HTTP.
+- Stores and retrieves capture metadata in MongoDB and exposes records through a JSON API.
+- Serves processed capture products from `watch/processed/`.
+- Monitors `incoming/` for compressed `.tar.gz` capture bundles, queues stable files, extracts the source data, derives image products, and can invoke the ND3 reconstruction executable to generate PLY point clouds.
+- Publishes processing events through Socket.IO.
+- Renders capture imagery and PLY point clouds in a WebGL-enabled browser.
 
-The repository contains application code and selected frontend assets. The full capture archive and MongoDB contents are runtime data and are not stored in Git; `watch/` is ignored by Git.
+The repository contains application code and selected frontend assets. The full capture archive and MongoDB records are runtime data and are not versioned in Git. The processed-data directory `watch/` is excluded from version control.
 
-## Repository layout
+## Repository organization
 
 ```text
 src/
@@ -37,25 +37,25 @@ compose.yaml                  Local app and MongoDB services
 Dockerfile                    App image definition
 ```
 
-## Run locally with Docker
+## Local execution with Docker Compose
 
-Docker Desktop with Docker Compose is the recommended development setup. From the repository root:
+Docker Desktop with Docker Compose provides the local development environment. From the repository root, build and start the application and database services:
 
 ```bash
 docker compose up --build
 ```
 
-Then open:
+The local endpoints are:
 
 - Homepage: <http://localhost:3000/>
 - Capture archive: <http://localhost:3000/dashboard>
 - MongoDB is published only on `127.0.0.1:27017` for local tools.
 
-The Compose setup runs the app with Nodemon, mounts `src/`, `public/`, `incoming/`, and `watch/processed/` from the working tree, and stores MongoDB data in the named `lunarlab_mongo_data` volume. Stop the services with `Ctrl-C`, or run `docker compose down`; the named database volume remains. To remove that volume as well, Docker Compose requires the separate `docker compose down --volumes` command, which deletes its stored database contents.
+The Compose configuration runs the application with Nodemon, mounts `src/`, `public/`, `incoming/`, and `watch/processed/` from the working tree, and stores MongoDB data in the named `lunarlab_mongo_data` volume. Stop the services with `Ctrl-C` or `docker compose down`; the named database volume is retained. `docker compose down --volumes` also removes the database volume and its contents.
 
-The Compose file uses local development values and placeholder ND3 paths. It is intended for working on the site and browsing captures already present in `watch/processed/`. The database starts empty unless you import or populate it; the processed files and MongoDB records need to correspond for the archive to list and open captures.
+The Compose file specifies development values and placeholder ND3 paths. It supports interface development and visualization of captures already present in `watch/processed/`. MongoDB starts without capture records unless records are imported or created. Archive entries require corresponding metadata records and processed files to be available.
 
-## Configuration and capture processing
+## Runtime configuration and processing pipeline
 
 The server reads these environment variables:
 
@@ -68,11 +68,11 @@ The server reads these environment variables:
 | `ND3_BINARY` | Path to the ND3 reconstruction executable | Compose placeholder: `/app/not-configured/nd3` |
 | `CALIBRATION` | Path to the calibration file passed to ND3 | Compose placeholder: `/app/not-configured/calibration.json` |
 
-To process new bundles, place a `.tar.gz` bundle in `incoming/`. The watcher waits for the file size to stabilize before queueing it. Processing extracts the bundle under `watch/processed/`, derives channel images and metadata, and attempts ND3 reconstruction. The conversion service invokes the ImageMagick `convert` command; full reconstruction also requires a compatible ND3 executable and calibration file. The checked-in Compose configuration does **not** include those tools or real ND3 paths, so configure and mount them before expecting new PLY files to be generated.
+To process a new capture, place its `.tar.gz` bundle in `incoming/`. The file watcher waits for the bundle size to stabilize before submitting it to the processing queue. The pipeline extracts files under `watch/processed/`, derives image channels and metadata, and attempts ND3 reconstruction. Image conversion invokes ImageMagick's `convert` command. PLY generation additionally requires a compatible ND3 executable and calibration file. These tools and valid paths are not included in the checked-in Compose configuration; configure and mount them before processing new bundles for PLY output.
 
 Do not put credentials in source files. `.env` is ignored by Git; provide private runtime configuration through the deployment environment or a local, untracked `.env` file.
 
-## Useful routes
+## HTTP interfaces
 
 | Route | Description |
 | --- | --- |
@@ -82,7 +82,7 @@ Do not put credentials in source files. `.env` is ignored by Git; provide privat
 | `/api/nd3/:id` | Read one record by MongoDB ID |
 | `/watch/processed/...` | Static access to processed capture assets |
 
-## Development
+## Developer workflow
 
 For Node.js development outside Compose, install dependencies with `npm ci`. The package scripts are:
 
@@ -96,6 +96,6 @@ npm test
 
 The browser’s PLY renderer loads Three.js modules from jsDelivr, so rendering those models requires browser access to that CDN.
 
-## Deployment note
+## Production deployment considerations
 
-The local Compose stack is for development and archival review. Production deployment is managed separately from this Compose file; check the host’s current process manager and reverse-proxy configuration before deploying or restarting anything. Do not assume a local image rebuild changes the production service.
+The Compose stack is intended for local development and archival review. Production deployment is managed independently of this Compose configuration. Confirm the host's process manager, application configuration, and reverse-proxy routing before deploying or restarting production services; rebuilding the local image does not update the production application.
