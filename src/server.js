@@ -20,6 +20,12 @@ const app = express();
 // Basic middleware
 app.use(express.json());
 
+// Keep historic sample links working while the root route becomes the project homepage.
+app.get('/', (req, res) => {
+  const page = req.query.nd3 ? 'viewer.html' : 'index.html';
+  res.sendFile(path.join(__dirname, '..', 'public', page));
+});
+
 app.use(express.static('public'));
 
 app.use(express.static(path.join(__dirname, '..', 'public')));

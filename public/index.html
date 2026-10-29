@@ -1,150 +1,74 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-324N91T3CC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-324N91T3CC');
-</script>
-
-  <meta charset="UTF-8">
-  <title>ND3 Viewer Web-App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
-        "three/examples/jsm/loaders/PLYLoader.js": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/loaders/PLYLoader.js",
-        "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/controls/OrbitControls.js"
-      }
-    }
-  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080909">
+  <meta name="description" content="AKALL, Azure Kinect à la Luna: RGB-D capture research at NASA Ames' SSERVI lunar regolith testbed.">
+  <title>AKALL — Azure Kinect à la Luna</title>
+  <link rel="stylesheet" href="/css/home.css">
 </head>
-
-
-
 <body>
-  <div id="multiview" style="display: none;"></div>
-  <div id="viewport">
-  <div class="menu-item info-trigger" id="info-trigger" title="Sample Info">i</div>
-  <div class="menu-divider"></div>
-  <a href="/dashboard" class="menu-item menu-link" title="Back to Dashboard">⌂</a>
-  <div class="menu-item" data-view="view1">⿱</div>
-  <div class="menu-item selected" data-view="view2">⿺</div>
-  <div class="menu-item" data-view="view3">⿴</div>
-</div>
-
-<div id="viewcam" style="display: none;">
-  <div class="menu-item" data-view="view1">⿱</div>
-  <div class="menu-item selected" data-view="view2">⿺</div>
-  <div class="menu-item" data-view="view3">⿴</div>
-</div>
-
-
-<div id="sidebar" class="view3-menu" style="display: none;">
-  <div class="menu-item sel">․</div>
-  <div class="menu-item" >‥</div>
-  <div class="menu-item" >…</div>
-</div>
-
-<div id="underbar" class="view3-menu" style="display: none;">
-  <div class="menu-item">⿻</div>
-  <div class="menu-item sel" style="margin-top: 6px;">  
-    <div class="grid-A">
-      <span class="grid-B top">⿲</span>
-      <span class="grid-B bottom">⿳</span></div>
-    </div>
-    <div class="menu-item" style="margin-top: 6px;font-size: 31px;line-height: 0.8;opacity: 0.7;">⊿</div>
-    <div class="menu-item" style="margin-top: 6px;font-size: 34px;line-height: 0.8;opacity: 0.7;">⊙</div>
-    </div>
-</div>
-<div id="upperbar" class="view3-menu" style="display: none;">
-  <div class="menu-item">  
-  <div class="grid-A" >
-    <span class="grid-B top">⿲</span>
-    <span class="grid-B bottom">⿻</span></div>
-    </div>
-</div>
-
-<div id="logview" class="console-overlay view3-menu">
-  <button id="close-logview" class="close-button">-</button>
-  <div class="log-content" id="meta-content">
-    Loading meta data...
-  </div>
-</div>
-
-<!-- Info Panel Dropdown -->
-<div id="info-panel" class="info-panel">
-  <div class="info-header">
-    <span class="info-title" id="info-title">LUNAR SAMPLE</span>
-  </div>
-  <div class="info-body" id="info-body">
-    <div class="info-loading">Loading sample data...</div>
-  </div>
-</div>
-
-
-<div id="fullScreenPLYViewer" class="full-screen-ply" style="display: none;"></div>
-
-  <!-- Main container filling the viewport -->
-  <div class="grid-container">
-    <!-- Top Section: Left column for grayscale images; Right column for merged PLY viewer -->
-    <div class="top-section">
-      <div class="left-col">
-        <div class="grayscale-cell" id="gray-cell-1">
-          <img id="img-grayscale" src="" alt="Grayscale 1">
-          <div class="channel-label">D</div>
-          <div class="extra-label">
+  <img id="lunar-texture" src="/watch/processed/DF_LS120_HRN-1740370993019/1676595431C30MJPG3072P.jpeg" alt="" aria-hidden="true">
+  <div class="shade" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="wordmark" href="/" aria-label="AKALL home">AKALL <span>FIELD ARCHIVE / 01</span></a>
+    <a class="mission-control" href="/dashboard">MISSION CONTROL</a>
+  </header>
+  <main class="landing">
+    <section class="project-frame" aria-label="AKALL research information">
+      <div class="frame-rail"><span>RESEARCH PROJECT / 01</span><span>NASA AMES LUNAR LAB</span></div>
+      <div class="panel-viewport">
+        <section class="panel-view" id="view-overview" data-panel-view="overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">
+          <p class="project-kicker">AZURE KINECT À LA LUNA</p>
+          <h1 id="project-title">AKALL</h1>
+          <p class="project-description">AKALL (Azure Kinect à la Luna) is an RGB-D imaging software and payload project developed around the Azure Kinect for planetary robotics. These archive scans come from the NASA Ames Lunar Lab (SSERVI Lunar Testbed), a 4 × 4 m field of lunar-regolith simulant with a crater, rocks, and ejecta. The thesis documents a broader 180-sample capture campaign.</p>
+          <div class="project-facts">
+            <div><span>TEST SITE</span><strong>NASA AMES LUNAR LAB</strong></div>
+            <div><span>DATA CHANNELS</span><strong>RGB · DEPTH · NIR · PLY</strong></div>
+            <div><span>TESTBED</span><strong>4 × 4 M / 8 T SIMULANT</strong></div>
+            <div><span>THESIS CAMPAIGN</span><strong>180 CAPTURES</strong></div>
           </div>
-        </div>
-        <div class="grayscale-cell" id="gray-cell-2">
-          <img id="img-grayscale-2" src="" alt="Grayscale 2">
-          <div class="channel-label">N</div>
-          <div class="extra-label">
+          <div class="capture-index">
+            <span class="capture-index-label">DATASET</span>
+            <div class="capture-links" id="capture-links" aria-label="Lunar surface samples"><span class="capture-links-status">LOADING CAPTURE INDEX</span></div>
           </div>
-        </div>
+        </section>
+        <section class="panel-view browser-view" id="view-publications" data-panel-view="publications" role="tabpanel" aria-labelledby="tab-publications" tabindex="0" hidden>
+          <div class="browser-chrome"><span class="browser-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="browser-location">AKALL / RESEARCH / PUBLICATIONS</span></div>
+          <div class="browser-content">
+            <p class="project-kicker">SELECTED RESEARCH · 2021—2026</p>
+            <h2 id="publications-title">Publications</h2>
+            <p class="view-intro">Lunar imaging, depth capture, regolith analysis, and virtual planetary fieldwork.</p>
+            <p class="scroll-hint">SCROLL TO EXPLORE</p>
+            <ol class="publication-list">
+              <li><span class="pub-year">2026</span><div><a href="https://ieeexplore.ieee.org/document/11519787" target="_blank" rel="noopener noreferrer">RGB–NIR Reflectance and 3D Microtopography for Lunar Regolith Analysis Using Time-of-Flight Imaging Systems</a><p>Don D. Haddad, Cody Paige, Ariel Ekblaw, Joseph A. Paradiso, Dava J. Newman, Amanda M. Cook, Ariel N. Deutsch, Jennifer Heldmann, Anthony Colaprete · IEEE Aerospace Conference</p></div></li>
+              <li><span class="pub-year">2026</span><div><span class="pub-title">3D ToF–RGB/NIR Imaging of Antarctic Lunar Analogs for Geotechnical and Volatile Assessment in ISRU Drilling Operations</span><p>Cody A. Paige, Don Derek Haddad, Carter Fortuin, Matthew Pearson, Brian Glass, Ariel Deutsch, Amanda Marie Cook, Anthony Colaprete, Jennifer Heldmann · AIAA ASCEND</p></div></li>
+              <li><span class="pub-year">2025</span><div><a href="https://www.hou.usra.edu/meetings/lpsc2025/pdf/2679.pdf" target="_blank" rel="noopener noreferrer">Measuring Reflectance and Maturity of Lunar Regolith and Permafrost Simulants Using Visible-Near Infrared Wavelengths</a><p>Don D. Haddad, Ariel N. Deutsch, Anthony Colaprete, Amanda M. Cook, Cody Paige, Eyal Perry, Jennifer Heldmann · Lunar and Planetary Science Conference</p></div></li>
+              <li><span class="pub-year">2024</span><div><a href="https://ui.adsabs.harvard.edu/abs/2024LPICo3074.5007C/abstract" target="_blank" rel="noopener noreferrer">Moon3D: A Depth-Mapping Camera for Lunar Environmental and Geophysical Studies</a><p>A. M. Cook, C. Paige, D. D. Haddad, A. Ekblaw, S. Auffinger, J. Heldmann, F. S. Ward, A. Rademacher, B. White, J. Shimada, A. Colaprete · LPI Contributions 3074</p></div></li>
+              <li><span class="pub-year">2024</span><div><a href="https://ieeexplore.ieee.org/document/10521000" target="_blank" rel="noopener noreferrer">Azure Kinect à La Luna (AKALL): Leveraging Low-Cost RGB and Depth-Camera in Lunar Exploration</a><p>Don D. Haddad, Cody Paige, Ferrous Ward, Joseph A. Paradiso, Dava Newman, Ariel Ekblaw, Amanda Cook, Jennifer Heldmann · IEEE Aerospace Conference</p></div></li>
+              <li><span class="pub-year">2023</span><div><a href="https://resenv.media.mit.edu/pubs/theses/haddad-ddh-PhD-MAS-2023-thesis.pdf" target="_blank" rel="noopener noreferrer">Responsive Space Environments: New Paradigms in Blending Virtual and Physical Exploration through Human-Robot Operations</a><p>Don D. Haddad · PhD Thesis, MIT Media Lab</p></div></li>
+              <li><span class="pub-year">2023</span><div><span class="pub-title">Leveraging Docker Containers for Azure Kinect Integration in Space Robotics: AKALL Framework</span><p>Don D. Haddad, Stefan Unterhauser, Cody A. Paige, Ben Brokaw, Ferrous S. Ward, Joseph A. Paradiso, J. Heldmann, Dava J. Newman · SpaceCHI 3.0</p></div></li>
+              <li><span class="pub-year">2023</span><div><span class="pub-title">Multi-Sensor 3D Data Visualization in Virtual Reality for Planetary Science and Mission Operations</span><p>Ferrous S. Ward, Cody A. Paige, Don D. Haddad, Jessica E. Todd, Jennifer Heldmann, Darlene Lim, Ariel Ekblaw, Dava Newman · ICES</p></div></li>
+              <li><span class="pub-year">2023</span><div><span class="pub-title">Operational Geology in a Virtual Environment (OGIVE): Novel Approaches to Virtualizing Geological Expeditions for Planetary Exploration</span><p>Cody A. Paige, Don D. Haddad, Ferrous S. Ward, Trent J. Piercy, Jessica E. Todd, Joseph A. Paradiso, Dava J. Newman · SpaceCHI 3.0</p></div></li>
+              <li><span class="pub-year">2023</span><div><span class="pub-title">Data Collection in Svalbard, Norway to Test the Use of Virtual Reality for Lunar and Planetary Surface Exploration</span><p>Cody A. Paige, Don Derek Haddad, Ferrous Ward, Jessica Todd, Ariel Ekblaw, Dava Newman · ICES</p></div></li>
+              <li><span class="pub-year">2022</span><div><a href="https://ieeexplore.ieee.org/document/9843571" target="_blank" rel="noopener noreferrer">Assessment of Depth Data Acquisition Methods for VR Mission Operations Support Tools</a><p>A. Forsey-Smerek, C. Paige, F. Ward, D. D. Haddad, L. Sanneman, J. Todd, J. Heldmann, D. Lim, D. Newman · IEEE Aerospace Conference</p></div></li>
+              <li><span class="pub-year">2021</span><div><a href="https://arc.aiaa.org/doi/10.2514/6.2021-4203" target="_blank" rel="noopener noreferrer">A Virtual Reality Platform for Lunar Rover Missions to Reduce Decision-Making Time and Improve Situational Awareness</a><p>C. A. Paige, A. Forsey-Smerek, D. D. Haddad, F. Ward, T. Piercy, J. Heldmann, D. Lim, A. Colaprete, A. Cook, D. Newman · ASCEND</p></div></li>
+              <li><span class="pub-year">2021</span><div><a href="https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/845849" target="_blank" rel="noopener noreferrer">Towards the Development of 3D Lunar Surface Depth-Data Collection for Geology in Virtual Reality</a><p>C. Paige, F. Ward, D. D. Haddad, A. Forsey-Smerek, L. M. Sanneman, J. Todd, A. Colaprete, D. S. S. Lim, J. Heldmann, D. Newman · AGU Fall Meeting</p></div></li>
+            </ol>
+            <a class="source-link" href="https://www.donderek.cc/" target="_blank" rel="noopener noreferrer">SOURCE: DON D. HADDAD PUBLICATIONS</a>
+          </div>
+        </section>
       </div>
-      <div class="right-col">
-        <div class="ply-viewer" id="ply-viewer-merged"></div>
-      </div>
-    </div>
-    
-    <div class="scene-section">
-      <div class="scene-item">
-        <img id="img-original" src="" alt="Original Scene">
-        <div class="channel-label">O</div>
-      </div>
-      <div class="scene-item">
-        <img id="img-blue" src="" alt="Blue Channel">
-        <div class="channel-label blue">B</div>
-      </div>
-      <div class="scene-item">
-        <img id="img-green" src="" alt="Green Channel">
-        <div class="channel-label green">G</div>
-      </div>
-      <div class="scene-item">
-        <img id="img-red" src="" alt="Red Channel">
-        <div class="channel-label red">R</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="meta-overlay" class="meta-overlay">
-    <button id="close-overlay" class="close-button">X</button>
-    <div id="meta-content" class="meta-content">
-    </div>
-  </div>
-
-  <!-- Load JavaScript Module -->
-  <script type="module" src="js/main.js"></script>
+      <nav class="panel-nav" aria-label="Research information views" role="tablist">
+        <button id="tab-overview" type="button" role="tab" aria-controls="view-overview" aria-selected="true" data-panel-tab="overview">OVERVIEW</button>
+        <button id="tab-publications" type="button" role="tab" aria-controls="view-publications" aria-selected="false" data-panel-tab="publications">PUBLICATIONS</button>
+      </nav>
+    </section>
+    <div class="scene-label"><span>RGB TEXTURE / DEPTH WIREFRAME</span><span>DF_LS120_HRN</span></div>
+  </main>
+  <footer class="site-footer"><span>DEPTH <i>·</i> COLOR <i>·</i> NIR</span><a href="/dashboard">OPEN THE ARCHIVE <span aria-hidden="true">→</span></a></footer>
+  <script src="/js/lunar-terrain.js" defer></script>
+  <script src="/js/project-panel.js" defer></script>
 </body>
 </html>

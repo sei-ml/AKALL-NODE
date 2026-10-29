@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-324N91T3CC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-324N91T3CC');
+</script>
+
+  <meta charset="UTF-8">
+  <title>ND3 Viewer Web-App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
+        "three/examples/jsm/loaders/PLYLoader.js": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/loaders/PLYLoader.js",
+        "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/controls/OrbitControls.js"
+      }
+    }
+  </script>
+</head>
+
+
+
+<body class="viewer-loading">
+  <div id="capture-loader" role="status" aria-live="polite">
+    <span class="capture-loader-mark" aria-hidden="true"></span>
+    <span id="capture-loader-label">LOADING CAPTURE</span>
+  </div>
+  <div id="multiview" style="display: none;"></div>
+  <div id="viewport">
+  <div class="menu-item info-trigger" id="info-trigger" title="Sample Info"><span class="toolbar-glyph">I</span></div>
+  <div class="menu-divider"></div>
+  <a href="/dashboard" class="menu-item menu-link" title="Back to Dashboard"><span class="toolbar-glyph">Δ</span></a>
+  <div class="menu-item" data-view="view1">⿱</div>
+  <div class="menu-item selected" data-view="view2">⿺</div>
+  <div class="menu-item" data-view="view3">⿴</div>
+</div>
+
+<div id="viewcam" style="display: none;">
+  <div class="menu-item" data-view="view1">⿱</div>
+  <div class="menu-item selected" data-view="view2">⿺</div>
+  <div class="menu-item" data-view="view3">⿴</div>
+</div>
+
+
+<div id="sidebar" class="view3-menu" style="display: none;">
+  <button type="button" class="menu-item point-size-control" data-point-size="0.8" aria-label="Small particles" aria-pressed="false" title="Small particles">.</button>
+  <button type="button" class="menu-item point-size-control sel" data-point-size="2" aria-label="Medium particles" aria-pressed="true" title="Medium particles">..</button>
+  <button type="button" class="menu-item point-size-control" data-point-size="4" aria-label="Large particles" aria-pressed="false" title="Large particles">...</button>
+</div>
+
+<div id="underbar" class="view3-menu" style="display: none;">
+  <div class="menu-item">⿻</div>
+  <button type="button" class="menu-item tool-control sel" data-tool="grid" aria-pressed="true" title="Toggle 3D grid" aria-label="Toggle 3D grid">▦</button>
+  <button type="button" class="menu-item tool-control" data-tool="measure" aria-pressed="false" title="Measurement tool (coming later)" aria-label="Measurement tool" disabled>↔</button>
+  <button type="button" class="menu-item tool-control" data-tool="marker" aria-pressed="false" title="Marker tool (coming later)" aria-label="Marker tool" disabled>⌖</button>
+</div>
+<div id="logview" class="console-overlay view3-menu">
+  <button id="close-logview" class="close-button">-</button>
+  <div class="log-content" id="meta-content">
+    Loading meta data...
+  </div>
+</div>
+
+<!-- Info Panel Dropdown -->
+<div id="info-panel" class="info-panel">
+  <div class="info-header">
+    <span class="info-title" id="info-title">LUNAR SAMPLE</span>
+  </div>
+  <div class="info-body" id="info-body">
+    <div class="info-loading">Loading sample data...</div>
+  </div>
+</div>
+
+
+<div id="fullScreenPLYViewer" class="full-screen-ply" style="display: none;"></div>
+
+  <!-- Main container filling the viewport -->
+  <div class="grid-container">
+    <!-- Top Section: Left column for grayscale images; Right column for merged PLY viewer -->
+    <div class="top-section">
+      <div class="left-col">
+        <div class="grayscale-cell" id="gray-cell-1">
+          <img id="img-grayscale" src="" alt="Grayscale 1">
+          <div class="channel-label">D</div>
+          <div class="extra-label">
+          </div>
+        </div>
+        <div class="grayscale-cell" id="gray-cell-2">
+          <img id="img-grayscale-2" src="" alt="Grayscale 2">
+          <div class="channel-label">N</div>
+          <div class="extra-label">
+          </div>
+        </div>
+      </div>
+      <div class="right-col">
+        <div class="ply-viewer" id="ply-viewer-merged"></div>
+      </div>
+    </div>
+    
+    <div class="scene-section">
+      <div class="scene-item">
+        <img id="img-original" src="" alt="Original Scene">
+        <div class="channel-label">O</div>
+      </div>
+      <div class="scene-item">
+        <img id="img-blue" src="" alt="Blue Channel">
+        <div class="channel-label blue">B</div>
+      </div>
+      <div class="scene-item">
+        <img id="img-green" src="" alt="Green Channel">
+        <div class="channel-label green">G</div>
+      </div>
+      <div class="scene-item">
+        <img id="img-red" src="" alt="Red Channel">
+        <div class="channel-label red">R</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="meta-overlay" class="meta-overlay">
+    <button id="close-overlay" class="close-button">X</button>
+    <div id="meta-content" class="meta-content">
+    </div>
+  </div>
+
+  <!-- Load JavaScript Module -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

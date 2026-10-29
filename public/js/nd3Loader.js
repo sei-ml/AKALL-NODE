@@ -138,6 +138,27 @@ function setupInfoPanelToggle() {
   }
 }
 
+function waitForImageAssets(imageIds) {
+  const pending = imageIds.map((id) => {
+    const image = document.getElementById(id);
+    if (!image || !image.getAttribute('src') || image.complete) return Promise.resolve();
+    return new Promise((resolve) => {
+      const finish = () => resolve();
+      image.addEventListener('load', finish, { once: true });
+      image.addEventListener('error', finish, { once: true });
+    });
+  });
+  return Promise.race([
+    Promise.all(pending),
+    new Promise((resolve) => window.setTimeout(resolve, 15000)),
+  ]);
+}
+
+function finishViewerLoading() {
+  document.body.classList.remove('viewer-loading');
+  document.body.classList.add('viewer-ready');
+}
+
 export async function loadND3File(createMergedPLYViewerFn) {
   const urlParams = new URLSearchParams(window.location.search);
   const dataId = urlParams.get('nd3') || 'C_LS180_Y0_LO-1739825346971';
@@ -159,6 +180,8 @@ export async function loadND3File(createMergedPLYViewerFn) {
     }
     const meta = await response.json();
     console.log("ND3 Meta Data Loaded:", meta);
+    const loaderLabel = document.getElementById('capture-loader-label');
+    if (loaderLabel) loaderLabel.textContent = `LOADING ${meta.originalFileName || dataId}`.toUpperCase();
 
     window.metaData = meta;
     
@@ -224,6 +247,11 @@ export async function loadND3File(createMergedPLYViewerFn) {
       createMergedPLYViewerFn("ply-viewer-merged", relativePath + nd3Reconstruction[0].ply);
     }
 
+    await waitForImageAssets([
+      'img-original', 'img-blue', 'img-green', 'img-red', 'img-grayscale', 'img-grayscale-2',
+    ]);
+    finishViewerLoading();
+
     const metaContent = document.getElementById('meta-content');
     metaContent.innerHTML = `
     <span class="meta-date"><span class="meta-highlight">DATE:</span> ${meta.timestamp?.humanReadable || 'N/A'} <span class="meta-highlight">UNIX:</span> ${meta.timestamp?.unix || 'N/A'} </span></br>
@@ -243,5 +271,8 @@ export async function loadND3File(createMergedPLYViewerFn) {
   } catch (err) {
     console.error('Error loading ND3 meta file:', err);
     document.getElementById('meta-content').textContent = 'Error loading meta data.';
+    const loaderLabel = document.getElementById('capture-loader-label');
+    if (loaderLabel) loaderLabel.textContent = 'CAPTURE COULD NOT BE LOADED';
+    window.setTimeout(finishViewerLoading, 500);
   }
 }

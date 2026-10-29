@@ -3,23 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ND3 Data Browser</title>
+  <title>AKALL — Capture Archive</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
     html, body{
         overflow-x: hidden;
         overflow-y: auto;
-        width: 100vw;
+        width: 100%;
     }
   </style>
 </head>
 <body>
+
+  <header class="archive-site-header">
+    <a class="archive-wordmark" href="/">AKALL <span>FIELD ARCHIVE / 01</span></a>
+    <a class="archive-home-link" href="/">RETURN TO SURFACE <span aria-hidden="true">←</span></a>
+  </header>
 
   <div id="data-container" class="grid-container">
     <p>Loading data...</p>
   </div>
 
   <script src="js/loadAll.js"></script>
+
+  <footer class="archive-site-footer">
+    <span>DEPTH <i>·</i> COLOR <i>·</i> NIR</span>
+    <span>CAPTURE ARCHIVE</span>
+  </footer>
 
 </body>
 </html>

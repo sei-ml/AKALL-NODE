@@ -49,6 +49,9 @@ export function setupLayoutAdjustment() {
 // Set up view switching logic.
 export function setupViewSwitching(createPLYViewerFn, resizePLYViewerFn) {
   let plyViewerInstance = null;
+  window.plyPointSize = window.plyPointSize ?? 2;
+  window.plyGridEnabled = window.plyGridEnabled ?? true;
+  window.plyActiveTool = window.plyActiveTool ?? 'navigate';
   
   const views = {
     // New multiview (view1) using container with id "multiview" to show PLY previews.
@@ -150,18 +153,50 @@ export function setupViewSwitching(createPLYViewerFn, resizePLYViewerFn) {
     });
     document.body.classList.add(view);
     views[view]();
-    document.querySelectorAll(".menu-item").forEach(item => {
-      item.classList.remove("selected");
-    });
+    document.querySelectorAll('.menu-item[data-view]').forEach(item => item.classList.remove('selected'));
     const selector = `.menu-item[data-view="${view}"]`;
     const selectedItem = document.querySelector(selector);
     if (selectedItem) selectedItem.classList.add("selected");
   }
   
-  document.querySelectorAll(".menu-item").forEach(item => {
+  document.querySelectorAll(".menu-item[data-view]").forEach(item => {
     item.addEventListener("click", function () {
       const view = this.getAttribute("data-view");
       switchView(view);
+    });
+  });
+
+  document.querySelectorAll('.point-size-control').forEach(button => {
+    button.addEventListener('click', () => {
+      const size = Number(button.dataset.pointSize);
+      window.plyPointSize = size;
+      window.plyViewerControls?.setPointSize(size);
+      document.querySelectorAll('.point-size-control').forEach(control => {
+        const active = control === button;
+        control.classList.toggle('sel', active);
+        control.setAttribute('aria-pressed', String(active));
+      });
+    });
+  });
+
+  document.querySelectorAll('.tool-control').forEach(button => {
+    button.addEventListener('click', () => {
+      const tool = button.dataset.tool;
+      if (tool === 'grid') {
+        window.plyGridEnabled = !window.plyGridEnabled;
+        window.plyViewerControls?.setGridVisible(window.plyGridEnabled);
+        button.classList.toggle('sel', window.plyGridEnabled);
+        button.setAttribute('aria-pressed', String(window.plyGridEnabled));
+        return;
+      }
+      const activate = window.plyActiveTool !== tool;
+      window.plyActiveTool = activate ? tool : 'navigate';
+      window.plyViewerControls?.setActiveTool(window.plyActiveTool);
+      document.querySelectorAll('.tool-control[data-tool="measure"], .tool-control[data-tool="marker"]').forEach(control => {
+        const active = activate && control === button;
+        control.classList.toggle('sel', active);
+        control.setAttribute('aria-pressed', String(active));
+      });
     });
   });
   
@@ -259,9 +294,12 @@ function populateMultiview() {
   }
   plyFiles = plyFiles.slice(0, 4);
   
-  // Create a preview canvas for each .ply file.
+  // Create the canvases first, then load each preview in sequence to avoid
+  // competing for memory while the PLY files are parsed.
+  const previews = [];
   plyFiles.forEach(plyUrl => {
-    const previewCanvas = createPLYPreview(plyUrl, previewSize, previewSize);
+    const preview = createPLYPreview(plyUrl, previewSize, previewSize);
+    const previewCanvas = preview.canvas;
     previewCanvas.className = "film-thumb";
     previewCanvas.style.marginRight = "10px";
     // Make each preview clickable:
@@ -275,7 +313,15 @@ function populateMultiview() {
       }
     });
     carousel.appendChild(previewCanvas);
+    previews.push(preview);
   });
+
+  (async () => {
+    for (const preview of previews) {
+      await preview.load();
+      await preview.ready;
+    }
+  })();
   
   // Append the carousel to the center row.
   centerDiv.appendChild(carousel);
