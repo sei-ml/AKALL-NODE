@@ -13,7 +13,10 @@
   <div class="shade" aria-hidden="true"></div>
   <header class="site-header">
     <a class="wordmark" href="/" aria-label="AKALL home">AKALL <span>FIELD ARCHIVE / 01</span></a>
-    <a class="mission-control" href="/dashboard">MISSION CONTROL</a>
+    <div class="capture-label" aria-label="RGB texture and depth wireframe; DF LS120 HRN capture">
+      <span>RGB TEXTURE / DEPTH WIREFRAME</span>
+      <span>DF_LS120_HRN</span>
+    </div>
   </header>
   <main class="landing">
     <section class="project-frame" aria-label="AKALL research information">
@@ -22,12 +25,11 @@
         <section class="panel-view" id="view-overview" data-panel-view="overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">
           <p class="project-kicker">AZURE KINECT À LA LUNA</p>
           <h1 id="project-title">AKALL</h1>
-          <p class="project-description">AKALL (Azure Kinect à la Luna) is an RGB-D imaging software and payload project developed around the Azure Kinect for planetary robotics. These archive scans come from the NASA Ames Lunar Lab (SSERVI Lunar Testbed), a 4 × 4 m field of lunar-regolith simulant with a crater, rocks, and ejecta. The thesis documents a broader 180-sample capture campaign.</p>
+          <p class="project-description">AKALL (Azure Kinect à la Luna) is an RGB-D imaging software and payload project developed around the Azure Kinect for planetary robotics. These archive scans come from the NASA Ames Lunar Lab, a 4 × 4 m field of lunar-regolith simulant featuring an analog crater and rocks.</p>
           <div class="project-facts">
             <div><span>TEST SITE</span><strong>NASA AMES LUNAR LAB</strong></div>
             <div><span>DATA CHANNELS</span><strong>RGB · DEPTH · NIR · PLY</strong></div>
             <div><span>TESTBED</span><strong>4 × 4 M / 8 T SIMULANT</strong></div>
-            <div><span>THESIS CAMPAIGN</span><strong>180 CAPTURES</strong></div>
           </div>
           <div class="capture-index">
             <span class="capture-index-label">DATASET</span>
@@ -65,9 +67,8 @@
         <button id="tab-publications" type="button" role="tab" aria-controls="view-publications" aria-selected="false" data-panel-tab="publications">PUBLICATIONS</button>
       </nav>
     </section>
-    <div class="scene-label"><span>RGB TEXTURE / DEPTH WIREFRAME</span><span>DF_LS120_HRN</span></div>
   </main>
-  <footer class="site-footer"><span>DEPTH <i>·</i> COLOR <i>·</i> NIR</span><a href="/dashboard">OPEN THE ARCHIVE <span aria-hidden="true">→</span></a></footer>
+  <footer class="site-footer"><a href="/dashboard">OPEN THE ARCHIVE <span aria-hidden="true">→</span></a></footer>
   <script src="/js/lunar-terrain.js" defer></script>
   <script src="/js/project-panel.js" defer></script>
 </body>

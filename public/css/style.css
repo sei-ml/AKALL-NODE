@@ -734,7 +734,7 @@ body.viewer-ready #capture-loader {
 /* Info Panel Dropdown */
 .info-panel {
   position: fixed;
-  top: 54px;
+  top: 64px;
   right: 10px;
   width: 320px;
   background: rgba(0, 0, 0, 0.9);
