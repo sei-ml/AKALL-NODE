@@ -104,10 +104,6 @@ Project-authored AKALL-NODE software is licensed under the Apache License 2.0; s
 
 The repository also contains research data products, capture-derived thumbnails, photographs, and third-party materials. The root software license does not establish reuse rights for those materials. They remain subject to their own notices, permissions, or applicable rights. In particular, `public/s1/HTML_attiude_indicator/` includes a separate GNU GPL v3 license. Review the relevant notices and obtain any needed permissions before redistributing non-software materials.
 
-## Production deployment considerations
-
-The Compose stack is intended for local development and archival review. Production deployment is managed independently of this Compose configuration. Confirm the host's process manager, application configuration, and reverse-proxy routing before deploying or restarting production services; rebuilding the local image does not update the production application.
-
 ## Acknowledgments
 
 The AKALL project acknowledges the NASA Ames Lunar Lab, the Space Exploration Initiative at MIT, and [DevelopSpace](https://developspace.org/) for their support of this research.
