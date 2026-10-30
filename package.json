@@ -16,7 +16,7 @@
     "WebSockets"
   ],
   "author": "Don D. Haddad <ddh@mit.edu>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "description": "Azure Kinect a La Luna - Application I/O Server",
   "dependencies": {
     "dotenv": "^16.4.7",

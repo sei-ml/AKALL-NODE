@@ -4,6 +4,8 @@ AKALL-NODE is the application I/O server and browser-based data archive for **AK
 
 The web interface comprises a project overview, a capture archive, and an interactive visualization client. Capture records can be selected from the archive or addressed directly with a URL such as `/?nd3=<capture-folder>`. The visualization client presents the associated imagery and PLY point cloud in multiple views.
 
+**Live project site:** <https://lunar.doppellab.space/>
+
 ## System overview
 
 - Delivers the project homepage, capture archive, and interactive data viewer over HTTP.
@@ -96,6 +98,16 @@ npm test
 
 The browser’s PLY renderer loads Three.js modules from jsDelivr, so rendering those models requires browser access to that CDN.
 
+## Licensing
+
+Project-authored AKALL-NODE software is licensed under the Apache License 2.0; see [`LICENSE`](LICENSE). This permissive license includes an express patent grant and is one of the software licenses recommended by DevelopSpace. The package metadata identifies the same license.
+
+The repository also contains research data products, capture-derived thumbnails, photographs, and third-party materials. The root software license does not establish reuse rights for those materials. They remain subject to their own notices, permissions, or applicable rights. In particular, `public/s1/HTML_attiude_indicator/` includes a separate GNU GPL v3 license. Review the relevant notices and obtain any needed permissions before redistributing non-software materials.
+
 ## Production deployment considerations
 
 The Compose stack is intended for local development and archival review. Production deployment is managed independently of this Compose configuration. Confirm the host's process manager, application configuration, and reverse-proxy routing before deploying or restarting production services; rebuilding the local image does not update the production application.
+
+## Acknowledgments
+
+The AKALL project acknowledges the NASA Ames Lunar Lab, the Space Exploration Initiative at MIT, and [DevelopSpace](https://developspace.org/) for their support of this research.
